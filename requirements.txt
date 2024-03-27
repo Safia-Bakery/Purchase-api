@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]   
+python-multipart
+SQLAlchemy
+python-jose
+pydantic[email]
+passlib[bcrypt]
+pytz
+psycopg2-binary
+fastapi-pagination
+openpyxl
+requests
+alembic
