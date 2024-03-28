@@ -14,7 +14,8 @@ from services import (
     get_current_user,
     verify_password,
     verify_refresh_token,
-    send_sms
+    send_sms,
+    send_email
 )
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
@@ -39,7 +40,6 @@ async def login(
     db: Session = Depends(get_db),
 ):
     user = query.get_user(db, form_data.username)
-
     if user is None or user.status == 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -82,10 +82,19 @@ async def register(
     db: Session = Depends(get_db)):
     #get_user = query.get_user_byphone(db, email=form_data.email,phone_number=form_data.phone)
     #if get_user:
+    if form_data.phone is None and form_data.email is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid data",
+        )
     user = query.user_create(db=db, user=form_data)
     randomnumber = random.randint(100000,999999)
-    query.user_update(db=db,id=user.id,otp="1234")
-    send_sms(user.phone,randomnumber)
+    query.user_update(db=db,id=user.id,otp=randomnumber,status=0)
+
+    if user.phone is not None:
+        send_sms(user.phone,randomnumber)
+    elif user.email is not None:
+        send_email(user.email,randomnumber)
     #current_user: user_sch.User = Depends(get_current_user)
     return user
 
@@ -134,11 +143,16 @@ async def forgot_password(
     form_data:user_sch.ResetPhone,
     db: Session = Depends(get_db)
 ):
-    user = query.get_user_byphone(db, phone_number=form_data.phone_number.replace('+',''),email=form_data.email)
+    if form_data.phone_number is not None:
+        form_data.phone_number = form_data.phone_number.replace('+','')
+    user = query.get_user_byphone(db, phone_number=form_data.phone_number,email=form_data.email)
     if user:
         randomnumber = random.randint(100000,999999)
-        query.user_update(db=db,id=user.id,otp="1234",status=0)
-        send_sms(user.phone,randomnumber)
+        query.user_update(db=db,id=user.id,otp=randomnumber,status=0)
+        if form_data.phone_number is not None:
+            send_sms(user.phone,randomnumber)
+        if form_data.email is not None:
+            send_email(form_data.email, randomnumber)
         return {"message":"OTP sent"}
     else:
         raise HTTPException(

@@ -23,21 +23,26 @@ def get_user_byphone(db: Session, phone_number:Optional[str]=None, email:Optiona
     if phone_number is not None:
         query = query.filter(Users.username == phone_number)
     if email is not None:
-        query = query.filter(Users.email == email)
+        query = query.filter(Users.username == email)
     return query.first()
 
 def user_create(db: Session, user: user_sch.UserCreate):
     hashed_password = hash_password(user.password)
-    phone = user.phone.replace("+", "")
+    if user.phone is not None:
+        user.phone = user.phone.replace("+", "")
+        username = user.phone
+    elif user.email is not None:
+        username = user.email
+
     db_user = Users(
-        username=phone,
+        username=username,
         hashed_password=hashed_password,
         address=user.address,
         name=user.name,
         inn=user.inn,
         email=user.email,
         company_name=user.company_name,
-        phone=phone,
+        phone=user.phone,
     )
     db.add(db_user)
     db.commit()

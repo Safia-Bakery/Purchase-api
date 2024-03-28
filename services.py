@@ -13,6 +13,7 @@ from fastapi import (
     HTTPException,
     status,
 )
+import smtplib
 from database import engine, SessionLocal
 from pydantic import ValidationError
 from fastapi.security import OAuth2PasswordBearer
@@ -40,6 +41,14 @@ ALGORITHM = os.environ.get("ALGORITHM")
 ESKIZ_BASE_URL = os.getenv("ESKIZ_BASE_URL")
 ESKIZ_LOGIN = os.getenv("ESKIZ_LOGIN")
 ESKIZ_PASSWORD = os.getenv("ESKIZ_PASSWORD")
+
+
+SMTP_PASSWORD = os.getenv('SMTP_PASSWORD')
+SMTP_USERNAME=os.getenv('SMTP_USERNAME')
+FROM_EMAIL = os.getenv('FROM_EMAIL')
+
+smtp_port = 587
+
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/login", scheme_name="JWT")
@@ -168,3 +177,17 @@ def send_sms(phone,message):
     }
     response = requests.post(url, data=data, headers=headers)
     return response.json()
+
+
+
+
+
+
+
+def send_email(to_email,body):
+    smtp_server = 'smtp.gmail.com'
+    message = f'Subject: Authentication\n\n{body}'
+    with smtplib.SMTP(smtp_server, 587) as smtp:
+        smtp.starttls()
+        smtp.login(SMTP_USERNAME, SMTP_PASSWORD)
+        smtp.sendmail(FROM_EMAIL, to_email, message)
