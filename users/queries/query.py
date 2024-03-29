@@ -21,7 +21,8 @@ def get_user(db: Session, username: str):
 def get_user_byphone(db: Session, phone_number:Optional[str]=None, email:Optional[str]=None):
     query = db.query(Users)
     if phone_number is not None:
-        query = query.filter(Users.username == phone_number)
+
+        query = query.filter(Users.username == phone_number.replace("+", ""))
     if email is not None:
         query = query.filter(Users.username == email)
     return query.first()
