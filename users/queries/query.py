@@ -16,6 +16,7 @@ def hash_password(password):
     return hashed_password.decode("utf-8")
 
 def get_user(db: Session, username: str):
+    username = username.replace("+", "")
     return db.query(Users).filter(Users.username == username).first()
 
 def get_user_byphone(db: Session, phone_number:Optional[str]=None, email:Optional[str]=None):
