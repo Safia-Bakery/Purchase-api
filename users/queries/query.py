@@ -43,7 +43,7 @@ def user_create(db: Session, user: user_sch.UserCreate):
         inn=user.inn,
         email=user.email,
         company_name=user.company_name,
-        phone=user.phone,
+        phone=username,
     )
     db.add(db_user)
     db.commit()
