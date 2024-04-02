@@ -99,7 +99,7 @@ async def create_order(
     return order_query.create_order(db=db, user_id=current_user.id, brend=brend, product=product, role=role, sertificate=sertificate, brochure=brochure, category_id=category_id, safia_worker=safia_worker)
 
 
-
+# from here you can create a new route for getting orders
 @order_router.get("/order", summary="Get orders",tags=["Order"],response_model=Page[order_sch.GetOrders])
 async def get_orders(
     user_id: Optional[int] = None,
