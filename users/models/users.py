@@ -24,7 +24,7 @@ from database import Base
 
 timezonetash = pytz.timezone("Asia/Tashkent")
 
-
+# this is models of userss
 class Users(Base):  
     __tablename__ = "users"
     id = Column(BIGINT, primary_key=True, index=True)
