@@ -116,7 +116,8 @@ async def verify_user(
     user = query.get_user_byphone(db, phone_number=form_data.phone_number,email=form_data.email)
     if user:
         if user.otp == form_data.otp:
-            query.user_update(db=db,id=user.id,status=1)
+            if user.status!=2:
+                query.user_update(db=db,id=user.id,status=1)
             tokens = {
                 "access_token": create_access_token(user.username),
                 "refresh_token": create_refresh_token(user.username),
@@ -148,7 +149,8 @@ async def forgot_password(
     user = query.get_user_byphone(db, phone_number=form_data.phone_number,email=form_data.email)
     if user:
         randomnumber = random.randint(100000,999999)
-        query.user_update(db=db,id=user.id,otp=randomnumber,status=0)
+        if user.status!=2:
+            query.user_update(db=db,id=user.id,otp=randomnumber,status=0)
         if form_data.phone_number is not None:
             send_sms(user.phone,randomnumber)
         if form_data.email is not None:

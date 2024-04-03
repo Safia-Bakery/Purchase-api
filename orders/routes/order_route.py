@@ -38,6 +38,11 @@ async def create_category(
     db: Session = Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)
 ):
+    if current_user.status != 2:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="You don't have permission to create category",
+        )
     return order_query.create_category(db, category)
 
 @order_router.get("/category", summary="Get categories",tags=["Order"],response_model=Page[order_sch.GetCategory])
@@ -56,6 +61,11 @@ async def update_category(
     db: Session = Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)
 ):
+    if current_user.status != 2:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="You don't have permission to create category",
+        )
     return order_query.update_category(db, category)
 
 
