@@ -151,6 +151,8 @@ async def forgot_password(
         randomnumber = random.randint(100000,999999)
         if user.status!=2:
             query.user_update(db=db,id=user.id,otp=randomnumber,status=0)
+        else:
+            query.user_update(db=db,id=user.id,otp=randomnumber)
         if form_data.phone_number is not None:
             send_sms(user.phone,randomnumber)
         if form_data.email is not None:
