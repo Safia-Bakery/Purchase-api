@@ -69,7 +69,7 @@ def get_orders(db: Session,user_id,status,id):
         query = query.filter(Orders.status == status)
     if id is not None:
         query = query.filter(Orders.id == id)
-    return query.all()
+    return query.order_by(Orders.id.desc()).all()
 
 
 def update_order(db: Session, order: order_sch.OrderUpdate):
