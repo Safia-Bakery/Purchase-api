@@ -167,7 +167,8 @@ async def get_clients(
     name: Optional[str] = None,
     status: Optional[int] = None,
     id: Optional[int] = None,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
     ):
     return paginate(order_query.get_clients(db,name=name,status=status,id=id))
 
