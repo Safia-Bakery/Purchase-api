@@ -139,6 +139,9 @@ async def update_order(
 
 
 
+
+
+
 #printer hello worlkd in this world
 
 
@@ -156,6 +159,17 @@ async def synch_expenditure(
     product_list = order_query.synchproducts(db, grouplist=group_list, products=products)
     del products
     return {"message":"Hello world"}
+
+
+
+@order_router.get("/clients",response_model=Page[order_sch.Clients])
+async def get_clients(
+    name: Optional[str] = None,
+    status: Optional[int] = None,
+    id: Optional[int] = None,
+    db: Session = Depends(get_db)
+    ):
+    return paginate(order_query.get_clients(db,name=name,status=status,id=id))
 
 
 @order_router.get("/synch/departments", summary="Expenditure synch iiko",tags=["Expenditure"])

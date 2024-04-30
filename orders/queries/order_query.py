@@ -258,3 +258,14 @@ def update_expanditure(db:Session,form_data:order_sch.ExpanditureUpdate):
         db.refresh(query)
         return query    
     return None
+
+
+def get_clients(db: Session, name, status, id):
+    query = db.query(Clients)
+    if name is not None:
+        query = query.filter(Clients.name.ilike(f"%{name}%"))
+    if status is not None:
+        query = query.filter(Clients.status == status)
+    if id is not None:
+        query = query.filter(Clients.id == id)
+    return query.order_by(Clients.name.desc()).all()
