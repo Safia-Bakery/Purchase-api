@@ -61,3 +61,75 @@ class GetOrders(BaseModel):
 class OrderUpdate(BaseModel):
     id:int
     status: Optional[int] = None
+
+
+
+class Branchs(BaseModel):
+    id: int
+    name: str
+    status: Optional[int] = 1
+    class Config:
+        orm_mode = True
+
+
+
+
+class Clients(BaseModel):
+    id: int
+    name: str
+    phone: Optional[str] = None
+    status: Optional[int] = 1
+    class Config:
+        orm_mode = True
+
+
+
+class Tools(BaseModel):
+    id: int
+    name: str
+    status: Optional[int] = 1
+    iiko_id: Optional[str] = None
+    price: float
+    class Config:
+        orm_mode = True
+
+
+class ExpanditureCreate(BaseModel):
+    client_id: int
+    branch_id: int
+    comment: Optional[str] = None
+    tools: Dict[str, str]
+
+
+class ExpanditureToolGet(BaseModel):
+    id: int
+    tool_id: int
+    tool: Optional[Tools] = None
+    amount: int
+    class Config:
+        orm_mode = True
+    
+
+
+class Expanditure(BaseModel):
+    id: int
+    client_id: int
+    client: Optional[Clients] = None
+    branch: Optional[Branchs] = None
+    branch_id: int
+    status: Optional[int] = None
+    comment: Optional[str] = None
+    expendituretool: Optional[list[ExpanditureToolGet]] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    class Config:
+        orm_mode = True
+
+
+
+class ExpanditureUpdate(BaseModel):
+    id: int
+    status: Optional[int] = None
+    comment: Optional[str] = None
+    class Config:
+        orm_mode = True

@@ -13,7 +13,12 @@ from services import (
     get_current_user,
     verify_password,
     verify_refresh_token,
-    generate_random_filename
+    generate_random_filename,
+    get_token,
+    getgroups,
+    getproducts,
+    authiiko,
+    list_departments
 )
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
@@ -109,6 +114,9 @@ async def create_order(
     return order_query.create_order(db=db, user_id=current_user.id, brend=brend, product=product, role=role, sertificate=sertificate, brochure=brochure, category_id=category_id, safia_worker=safia_worker)
 
 
+
+
+
 # from here you can create a new route for getting orders
 @order_router.get("/order", summary="Get orders",tags=["Order"],response_model=Page[order_sch.GetOrders])
 async def get_orders(
@@ -132,3 +140,89 @@ async def update_order(
 
 
 #printer hello worlkd in this world
+
+
+
+
+@order_router.get("/synch", summary="Expenditure synch iiko",tags=["Expenditure"])
+async def synch_expenditure(
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)):
+    key =authiiko()
+    groups = getgroups(key=key)
+    group_list = order_query.synchgroups(db, groups)
+    del groups
+    products = getproducts(key=key)
+    product_list = order_query.synchproducts(db, grouplist=group_list, products=products)
+    del products
+    return {"message":"Hello world"}
+
+
+@order_router.get("/synch/departments", summary="Expenditure synch iiko",tags=["Expenditure"])
+async def synch_departments(
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)):
+    key =authiiko()
+    
+    departments = list_departments(key=key)
+    department_list = order_query.insert_fillials(db, departments)
+    return {"message":"Hello world"}
+
+
+
+@order_router.get("/tool/iarch")
+async def toolgroups(
+    parent_id: Optional[UUID] = None,
+    name:Optional[str]=None,
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+    ):
+    data = {'folders':order_query.getarchtools(db,parent_id),'tools':order_query.tools_query_iarch(db,parent_id=parent_id,name=name)}
+    return data
+
+
+
+@order_router.get("/tool/search",response_model=Page[order_sch.Tools])
+async def searchtools(
+    name: Optional[str] = None,
+    id: Optional[int] = None,
+    db: Session = Depends(get_db)
+    ):
+    return paginate(order_query.searchtools(db,name=name,id=id))
+
+
+@order_router.get("/branch",response_model=Page[order_sch.Branchs])
+async def get_branchs(
+    name: Optional[str] = None,
+    status: Optional[int] = None,
+    id: Optional[int] = None,
+    db: Session = Depends(get_db)
+    ):
+    return paginate(order_query.get_branchs(db,name=name,status=status,id=id))
+
+
+
+
+
+@order_router.post("/expanditure", summary="Create expanditure",tags=["Expenditure"])
+async def create_expanditure(
+    form_data: order_sch.ExpanditureCreate,
+    db: Session = Depends(get_db)
+):
+    return {'success':True,'id':order_query.create_expanditure(db, form_data)}
+
+
+@order_router.get("/expanditure", summary="Get expanditure",tags=["Expenditure"],response_model=Page[order_sch.Expanditure])
+async def get_expanditure(
+    id: Optional[int] = None,
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
+    return paginate(order_query.get_expanditure(db, id=id))
+
+@order_router.put("/expanditure", summary="Update expanditure",tags=["Expenditure"])
+async def update_expanditure(
+    expanditure: order_sch.ExpanditureUpdate,
+    db: Session = Depends(get_db)
+):
+    return order_query.update_expanditure(db, expanditure)

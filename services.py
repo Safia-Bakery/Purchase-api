@@ -28,7 +28,9 @@ from users.queries import query
 
 load_dotenv()
 
-
+LOGIN_IIKO = os.environ.get("LOGIN_IIKO")
+PASSWORD_IIKO = os.environ.get("PASSWORD_IIKO")
+BASE_URL = os.environ.get("BASE_URL")
 
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  
@@ -191,3 +193,95 @@ def send_email(to_email,body):
         smtp.starttls()
         smtp.login(SMTP_USERNAME, SMTP_PASSWORD)
         smtp.sendmail(FROM_EMAIL, to_email, message)
+
+
+def authiiko():
+    data = requests.get(
+        f"{BASE_URL}/resto/api/auth?login={LOGIN_IIKO}&pass={PASSWORD_IIKO}"
+    )
+
+    key = data.text
+    return key
+
+
+
+def list_departments(key):
+    departments = requests.get(
+        f"{BASE_URL}/resto/api/corporation/departments?key={key}"
+    )
+
+    root = ET.fromstring(departments.content)
+    corporate_item_dtos = root.findall("corporateItemDto")
+
+    names = [
+        [item.find("name").text, item.find("id").text] for item in corporate_item_dtos
+    ]
+    return names
+
+
+
+def getgroups(key):
+    groups = requests.get(
+        f"{BASE_URL}/resto/api/v2/entities/products/group/list?key={key}"
+    ).json()
+    return groups
+
+
+
+def getproducts(key):
+    products = requests.get(
+        f"{BASE_URL}/resto/api/v2/entities/products/list?key={key}"
+    ).json()
+
+    return products
+
+
+
+def find_hierarchy(data, parent_id):
+    def dfs(current_id):
+        result = []
+        for item in data:
+            if item["parent"] == current_id:
+                child_id = item["id"]
+                result.append({
+                    "id": child_id,
+                    "name": item["name"],
+                    "num":item['num'],
+                    'code':item['code'],
+                    "parent":item["parent"],
+                    "category":item["category"],
+                    "description":item["description"]
+                })
+                result.extend(dfs(child_id))  # Recursive call for children
+        return result
+
+    # Find the parent item
+    parent_item = next((item for item in data if item["id"] == parent_id), None)
+
+    if parent_item:
+        return [{
+            "id": parent_id,
+            "name": parent_item["name"],
+            "num":parent_item['num'],
+            'code':parent_item['code'],
+            "parent":parent_item["parent"],
+            "category":parent_item["category"],
+            "description":parent_item["description"]
+        }] + dfs(parent_id)
+    else:
+        return []
+    
+
+
+def list_departments(key):
+    departments = requests.get(
+        f"{BASE_URL}/resto/api/corporation/departments?key={key}"
+    )
+
+    root = ET.fromstring(departments.content)
+    corporate_item_dtos = root.findall("corporateItemDto")
+
+    names = [
+        [item.find("name").text, item.find("id").text] for item in corporate_item_dtos
+    ]
+    return names
