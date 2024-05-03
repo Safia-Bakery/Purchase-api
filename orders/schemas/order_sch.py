@@ -89,7 +89,7 @@ class Tools(BaseModel):
     name: str
     status: Optional[int] = 1
     iiko_id: Optional[str] = None
-    price: float
+    price: Optional[float]=None
     class Config:
         orm_mode = True
 

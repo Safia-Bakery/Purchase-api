@@ -11,3 +11,4 @@ fastapi-pagination
 openpyxl
 requests
 alembic
+python-telegram-bot
