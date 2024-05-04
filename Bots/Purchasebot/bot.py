@@ -107,9 +107,15 @@ async def manu(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
     elif input_text=='Моя заявки':
         
         order_list = crud.get_orders(db=db,id=None)
-        reply_keyboard = transform_list(order_list,size=3,key='id')
-        await update.message.reply_text('Your orders', reply_markup=ReplyKeyboardMarkup(reply_keyboard,resize_keyboard=True))
-        return  ORDERLIST
+        if order_list:
+
+            reply_keyboard = transform_list(order_list,size=3,key='id')
+            await update.message.reply_text('Your orders', reply_markup=ReplyKeyboardMarkup(reply_keyboard,resize_keyboard=True))
+            return  ORDERLIST
+        else:
+            text = "NO orders"
+            await update.message.reply_text(text=text,reply_markup=ReplyKeyboardMarkup(manu_buttons,resize_keyboard=True))  
+            return MANU
 
 
 
@@ -117,6 +123,7 @@ async def createorder(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
     data = json.loads(update.effective_message.web_app_data.data)
     await update.message.reply_text(f"Главное меню",reply_markup=ReplyKeyboardMarkup(keyboard=manu_buttons,resize_keyboard=True))
     return MANU
+
 
 
 
