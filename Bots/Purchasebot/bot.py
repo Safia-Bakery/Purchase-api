@@ -27,7 +27,7 @@ from Bots.Purchasebot.services import transform_list
 
 from Bots.Purchasebot.queries import crud
 
-FRONT_URL = 'https://purchase.safiabakery.uz/'
+FRONT_URL = 'https://super.purchase.safiabakery.uz/'
 
 manu_buttons = [['Подать заявку','Моя заявки']]
 
