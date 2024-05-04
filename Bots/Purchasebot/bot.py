@@ -105,10 +105,10 @@ async def manu(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
         return CREATEORDER
     
     elif input_text=='Моя заявки':
-        await update.message.reply_text('My orders')
+        
         order_list = crud.get_orders(db=db,id=None)
         reply_keyboard = transform_list(order_list,size=3,key='id')
-        update.message.reply_text('Your orders', reply_markup=ReplyKeyboardMarkup(reply_keyboard,resize_keyboard=True))
+        await update.message.reply_text('Your orders', reply_markup=ReplyKeyboardMarkup(reply_keyboard,resize_keyboard=True))
         return  ORDERLIST
 
 
@@ -129,7 +129,7 @@ async def orderlist(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
         text +=f"Филиал: {order_list[0].branch.name}\n\n"
         text +='Товары:\n'
         for i in order_list[0].expendituretool:
-            text += f"{i.tool.name} x {i.amount} шт"
+            text += f"{i.tool.name} x {i.amount} шт\n"
     else:
         text = "None"
     await update.message.reply_text(text=text,reply_markup=ReplyKeyboardMarkup(manu_buttons,resize_keyboard=True))  
