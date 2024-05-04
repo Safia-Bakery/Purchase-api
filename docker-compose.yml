@@ -4,7 +4,7 @@ services:
   app:
     build: . # Path to the directory with your app's Dockerfile
     ports:
-      - "8004:8000" # Expose FastAPI's port
+      - "8007:8000" # Expose FastAPI's port
     depends_on:
       - postgres_db
     environment:
