@@ -115,7 +115,7 @@ async def manu(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
 
 async def createorder(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
     data = json.loads(update.effective_message.web_app_data.data)
-    await update.message.reply_text(f"можете оформлять заявки",reply_markup=ReplyKeyboardMarkup(keyboard=manu_buttons,resize_keyboard=True))
+    await update.message.reply_text(f"Главное меню",reply_markup=ReplyKeyboardMarkup(keyboard=manu_buttons,resize_keyboard=True))
     return MANU
 
 
@@ -155,8 +155,6 @@ def main() -> None:
             MANU:[MessageHandler(filters.TEXT,manu)],
             ORDERLIST:[MessageHandler(filters.TEXT,orderlist)],
             CREATEORDER:[MessageHandler(filters.StatusUpdate.WEB_APP_DATA,createorder)]
-            
-           
         },
         fallbacks=[CommandHandler('start',start)],
         allow_reentry=True,
