@@ -46,15 +46,18 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE,db=db) -> int
     """Starts the conversation and asks the user about their gender."""
     user_client = crud.get_client(db=db,id=update.message.from_user.id)
     if user_client:
+        await update.message.reply_text('Manu',reply_markup=ReplyKeyboardMarkup(manu_buttons,resize_keyboard=True))
         return MANU
 
-    await update.message.reply_text("""Здравствуйте
-Это корпоративный бот компании Safia
-Пожалуйста введите пароль:
+    else:
+        await update.message.reply_text("""Здравствуйте
+    Это корпоративный бот компании Safia
+    Пожалуйста введите пароль:
+    если у вас её нет, обратитесь к системному администратору вашей компании""")
 
-если у вас её нет, обратитесь к системному администратору вашей компании""")
+        return PASSWORD
 
-    return PASSWORD
+
 
 async def password(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
     input_text = update.message.text 
