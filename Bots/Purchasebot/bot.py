@@ -131,7 +131,7 @@ async def orderlist(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
         for i in order_list[0].expendituretool:
             text += f"{i.tool.name} x {i.amount} шт\n"
     else:
-        text = "None"
+        text = "NO orders"
     await update.message.reply_text(text=text,reply_markup=ReplyKeyboardMarkup(manu_buttons,resize_keyboard=True))  
     return MANU
 
