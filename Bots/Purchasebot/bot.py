@@ -29,7 +29,7 @@ from Bots.Purchasebot.queries import crud
 
 FRONT_URL = 'https://super.purchase.safiabakery.uz/'
 
-manu_buttons = [['Подать заявку','Моя заявки']]
+manu_buttons = [['Подать заявку','Мои заявки']]
 
 db = SessionLocal()
 backend_location = 'app/'
@@ -104,16 +104,15 @@ async def manu(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
             ),resize_keyboard=True))
         return CREATEORDER
     
-    elif input_text=='Моя заявки':
+    elif input_text=='Мои заявки':
         
         order_list = crud.get_orders(db=db,id=None)
         if order_list:
-
             reply_keyboard = transform_list(order_list,size=3,key='id')
-            await update.message.reply_text('Your orders', reply_markup=ReplyKeyboardMarkup(reply_keyboard,resize_keyboard=True))
+            await update.message.reply_text('Ваши заявки', reply_markup=ReplyKeyboardMarkup(reply_keyboard,resize_keyboard=True))
             return  ORDERLIST
         else:
-            text = "NO orders"
+            text = "No заявки"
             await update.message.reply_text(text=text,reply_markup=ReplyKeyboardMarkup(manu_buttons,resize_keyboard=True))  
             return MANU
 
@@ -138,7 +137,7 @@ async def orderlist(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
         for i in order_list[0].expendituretool:
             text += f"{i.tool.name} x {i.amount} шт\n"
     else:
-        text = "NO orders"
+        text = "No заявки"
     await update.message.reply_text(text=text,reply_markup=ReplyKeyboardMarkup(manu_buttons,resize_keyboard=True))  
     return MANU
 
