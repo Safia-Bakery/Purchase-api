@@ -122,6 +122,7 @@ class Expanditure(Base):
     branch_id = Column(BIGINT, ForeignKey("branchs.id"))
     branch = relationship("Branchs", back_populates="expanse")
     comment = Column(String, nullable=True)
+    name = Column(String,nullable=True)
     status = Column(Integer,default=0)
     expendituretool = relationship("ExpenditureTools", back_populates="expenditure")
     created_at = Column(DateTime(timezone=True), default=func.now())

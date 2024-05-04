@@ -124,8 +124,7 @@ async def get_orders(
     status: Optional[int] = None,
     id: Optional[int] = None,
     db: Session = Depends(get_db),
-    current_user: user_sch.User = Depends(get_current_user)
-):
+    current_user: user_sch.User = Depends(get_current_user)):
     return paginate(order_query.get_orders(db,user_id= user_id, status=status,id=id))
 
 @order_router.put("/order", summary="Update order",tags=["Order"])
@@ -173,6 +172,14 @@ async def get_clients(
     return paginate(order_query.get_clients(db,name=name,status=status,id=id))
 
 
+@order_router.put('/clients',response_model=order_sch.Clients)
+async def update_clients(
+    form_data:order_sch.UpdateClients,
+    db:Session=Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
+    return order_query.update_clients(db=db,form_data=form_data)
+    
 @order_router.get("/synch/departments", summary="Expenditure synch iiko",tags=["Expenditure"])
 async def synch_departments(
     db: Session = Depends(get_db),
@@ -228,12 +235,14 @@ async def create_expanditure(
 
 
 @order_router.get("/expanditure", summary="Get expanditure",tags=["Expenditure"],response_model=Page[order_sch.Expanditure])
-async def get_expanditure(
+async def get_expanditure_router(
     id: Optional[int] = None,
     db: Session = Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)
 ):
-    return paginate(order_query.get_expanditure(db, id=id))
+    return paginate(order_query.get_expanditure(db, id=id,client_id=None))
+
+
 
 @order_router.put("/expanditure", summary="Update expanditure",tags=["Expenditure"])
 async def update_expanditure(
@@ -241,3 +250,21 @@ async def update_expanditure(
     db: Session = Depends(get_db)
 ):
     return order_query.update_expanditure(db, expanditure)
+
+@order_router.delete('/expanditure/cart',summary='Delete cart items')
+async def delete_cart_items(
+    form_data:order_sch.DeleteCartItems,
+    db:Session = Depends(get_db),
+):
+    return order_query.delate_card_item(db=db,form_data=form_data)
+
+@order_router.get('/expanditure/mine',summary='get my expanditure',tags=['Expenditure'],response_model=Page[order_sch.Expanditure])
+async def get_order_router(
+    client_id:int,
+    db:Session=Depends(get_db)):
+    return paginate(order_query.get_expanditure(db=db,client_id=client_id,id=None))
+
+
+
+
+

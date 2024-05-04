@@ -241,23 +241,31 @@ def create_expanditure(db: Session, expanditure: order_sch.ExpanditureCreate):
     return db_expanditure.id
 
 
-def get_expanditure(db: Session, id):
+def get_expanditure(db: Session, id,client_id):
     query = db.query(Expanditure)
     if id is not None:
         query = query.filter(Expanditure.id == id)
+    if client_id is not None:
+        query = query.filter(Expanditure.client_id==client_id)
     return query.order_by(Expanditure.id.desc()).all()
 
 def update_expanditure(db:Session,form_data:order_sch.ExpanditureUpdate):
     query  = db.query(Expanditure).filter(Expanditure.id == form_data.id).first()
-    if query:
-        if form_data.status is not None:
-            query.status = form_data.status
-        if form_data.comment is not None:
-            query.comment = form_data.comment
-        db.commit()
-        db.refresh(query)
-        return query    
-    return None
+    if form_data.tools is not None:
+        # querydelete = db.query(ExpenditureTools).filter(ExpenditureTools.expenditure_id==query.id).delete()
+        # db.commit()
+        for key, value in form_data.tools.items():
+            tool = db.query(Tools).filter(Tools.id == key).first()
+            if tool:
+                db_expenditure_tool = ExpenditureTools(
+                    tool_id=tool.id,
+                    expenditure_id=query.id,
+                    amount=value
+                )
+                db.add(db_expenditure_tool)
+                db.commit()
+
+    return query
 
 
 def get_clients(db: Session, name, status, id):
@@ -269,3 +277,21 @@ def get_clients(db: Session, name, status, id):
     if id is not None:
         query = query.filter(Clients.id == id)
     return query.order_by(Clients.name.desc()).all()
+
+
+def update_clients(db:Session,form_data:order_sch.UpdateClients):
+    query = db.query(Clients).filter(Clients.id==form_data.id).first()
+    if query:
+        if form_data.name is not None:
+            query.name = form_data.name
+        if form_data.status is not None:
+            query.status = form_data.status
+        db.commit()
+        db.refresh(query)
+    return query
+
+
+def delate_card_item(db:Session,form_data:order_sch.DeleteCartItems):
+    query = db.query(ExpenditureTools).filter(ExpenditureTools.id==form_data.id).delete()
+    db.commit()
+    return query

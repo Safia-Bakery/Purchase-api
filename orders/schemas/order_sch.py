@@ -76,7 +76,7 @@ class Branchs(BaseModel):
 
 class Clients(BaseModel):
     id: int
-    name: str
+    name: Optional[str]=None
     phone: Optional[str] = None
     status: Optional[int] = 1
     class Config:
@@ -98,7 +98,8 @@ class ExpanditureCreate(BaseModel):
     client_id: int
     branch_id: int
     comment: Optional[str] = None
-    tools: Dict[str, str]
+    tools: Dict[str, int]
+
 
 
 class ExpanditureToolGet(BaseModel):
@@ -119,6 +120,7 @@ class Expanditure(BaseModel):
     branch_id: int
     status: Optional[int] = None
     comment: Optional[str] = None
+    name:Optional[str]=None
     expendituretool: Optional[list[ExpanditureToolGet]] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
@@ -131,5 +133,16 @@ class ExpanditureUpdate(BaseModel):
     id: int
     status: Optional[int] = None
     comment: Optional[str] = None
+    tools: Dict[str, int]
     class Config:
         orm_mode = True
+
+
+class UpdateClients(BaseModel):
+    id:int
+    status:Optional[int]=None
+    name:Optional[str]=None
+
+
+class DeleteCartItems(BaseModel):
+    id:int
