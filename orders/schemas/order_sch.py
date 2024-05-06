@@ -146,3 +146,11 @@ class UpdateClients(BaseModel):
 
 class DeleteCartItems(BaseModel):
     id:int
+
+
+
+class ExpanditureTools(BaseModel):
+    id: int
+    amount: int
+    class Config:
+        orm_mode = True

@@ -295,3 +295,13 @@ def delate_card_item(db:Session,form_data:order_sch.DeleteCartItems):
     query = db.query(ExpenditureTools).filter(ExpenditureTools.id==form_data.id).delete()
     db.commit()
     return query
+
+
+def update_expanditure_tools(db:Session,form_data:order_sch.ExpanditureTools):
+    query = db.query(ExpenditureTools).filter(ExpenditureTools.id==form_data.id).first()
+    if query:
+        if form_data.amount is not None:
+            query.amount = form_data.amount
+        db.commit()
+        db.refresh(query)
+    return query

@@ -251,7 +251,7 @@ async def update_expanditure(
 ):
     return order_query.update_expanditure(db, expanditure)
 
-@order_router.delete('/expanditure/cart',summary='Delete cart items')
+@order_router.delete('/expanditure/cart',summary='Delete cart items',tags=['Expenditure'] )
 async def delete_cart_items(
     form_data:order_sch.DeleteCartItems,
     db:Session = Depends(get_db),
@@ -264,6 +264,13 @@ async def get_order_router(
     db:Session=Depends(get_db)):
     return paginate(order_query.get_expanditure(db=db,client_id=client_id,id=None))
 
+
+
+@order_router.put('/expanditure/cart',summary='get expanditure tools',tags=['Expenditure'])
+async def update_expanditure_tools(
+    form_data:order_sch.ExpanditureTools,
+    db:Session=Depends(get_db)):
+    return order_query.update_expanditure_tools(db=db,form_data=form_data)
 
 
 
