@@ -50,7 +50,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE,db=db) -> int
         return MANU
 
     else:
-        await update.message.reply_text("""Здравствуйте Это корпоративный бот компании Safia\nПожалуйста введите пароль:\nесли у вас её нет, обратитесь к системному администратору вашей компании""")
+        await update.message.reply_text("""Здравствуйте Это корпоративный бот компании Safia\nПожалуйста введите пароль: Eсли у вас её нет, обратитесь к системному администратору вашей компании""")
 
         return PASSWORD
 
