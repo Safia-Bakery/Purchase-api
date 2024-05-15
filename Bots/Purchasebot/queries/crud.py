@@ -8,7 +8,7 @@ from sqlalchemy.sql import func
 from datetime import datetime,timedelta
 from sqlalchemy import or_, and_, Date, cast
 from uuid import UUID
-from orders.models.orders import Orders
+from orders.models import orders
 
 
 
