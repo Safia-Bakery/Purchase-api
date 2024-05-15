@@ -128,6 +128,7 @@ class Expanditure(Base):
     comment = Column(String, nullable=True)
     name = Column(String,nullable=True)
     status = Column(Integer,default=0)
+    deny_reason = Column(String,nullable=True)
     expendituretool = relationship("ExpenditureTools", back_populates="expenditure")
     created_at = Column(DateTime(timezone=True), default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
