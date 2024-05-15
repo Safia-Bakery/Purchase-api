@@ -23,7 +23,7 @@ from sqlalchemy.orm import Session
 import requests
 import database
 from fastapi import Depends
-from .services import  transform_list
+from services import  transform_list
 
 from queries import crud
 
