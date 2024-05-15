@@ -84,6 +84,7 @@ async def create_order(
     brochure:UploadFile = None,
     category_id:Annotated[int, Form()]=None,
     safia_worker:Annotated[bool, Form()]=None,
+    vat:Annotated[float, Form()]=None,
     db: Session = Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)
 ):
@@ -111,7 +112,7 @@ async def create_order(
         brochure = folder_name
     else:
         brochure = None
-    return order_query.create_order(db=db, user_id=current_user.id, brend=brend, product=product, role=role, sertificate=sertificate, brochure=brochure, category_id=category_id, safia_worker=safia_worker)
+    return order_query.create_order(db=db,vat=vat, user_id=current_user.id, brend=brend, product=product, role=role, sertificate=sertificate, brochure=brochure, category_id=category_id, safia_worker=safia_worker)
 
 
 

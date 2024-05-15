@@ -13,17 +13,7 @@ services:
       - files:/app/files
       - bot_files:/app/Bots/Purchasebot
 
-  postgres_db:
-    image: postgres:latest
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=1234
-      - POSTGRES_DB=purchase
 
 volumes:
-  postgres_data:
   files:
   bot_files:

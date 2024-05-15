@@ -25,7 +25,6 @@ Base.metadata.create_all(bind=engine)
 app.mount("/files", StaticFiles(directory="files"), name="files")
 #app.include_router(user_route.user_router, tags=["User"])
 #app.include_router(product_route.product_router, tags=["Product"])
-
 origins = ["*"]
 
 app.add_middleware(

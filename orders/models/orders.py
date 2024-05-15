@@ -49,8 +49,11 @@ class Orders(Base):
     category_id = Column(BIGINT, ForeignKey("categories.id"))
     category = relationship("Categories", back_populates="order")
     safia_worker = Column(Boolean,nullable=True)
+    vat = Column(Float,nullable=True)
     created_at = Column(DateTime(timezone=True), default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
 
 
 
