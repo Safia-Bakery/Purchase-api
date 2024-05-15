@@ -156,3 +156,5 @@ class ExpanditureTools(BaseModel):
     amount: int
     class Config:
         orm_mode = True
+
+

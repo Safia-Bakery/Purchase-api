@@ -19,7 +19,8 @@ from services import (
     getproducts,
     authiiko,
     list_departments,
-    send_sms
+    send_sms,
+generate_excell
 )
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
@@ -32,6 +33,9 @@ from users.schemas import user_sch
 from dotenv import load_dotenv
 import os
 load_dotenv()
+
+
+
 
 
 order_router = APIRouter()
@@ -292,6 +296,23 @@ async def update_expanditure_tools(
     form_data:order_sch.ExpanditureTools,
     db:Session=Depends(get_db)):
     return order_query.update_expanditure_tools(db=db,form_data=form_data)
+
+
+@order_router.get('/expanditure/excell',summary='get excell',tags=['Expenditure'])
+async def get_excell(
+    id:Optional[int]=None,
+    db:Session=Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
+    query = order_query.get_expanditure(db=db,id=id,client_id=None,branch_id=None,status=None)
+    if query:
+        file_name = generate_excell(data=query[0].expendituretool,db=db)
+        return {'success':True,'file':file_name}
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No data found",
+        )
 
 
 

@@ -13,6 +13,8 @@ from fastapi import (
     HTTPException,
     status,
 )
+from orders.queries.order_query import tools_query_iarch
+import pandas as pd
 import smtplib
 from database import engine, SessionLocal
 from pydantic import ValidationError
@@ -285,3 +287,22 @@ def list_departments(key):
         [item.find("name").text, item.find("id").text] for item in corporate_item_dtos
     ]
     return names
+
+
+def generate_excell(data,db):
+    inseting_data = {"Наименование": [], "Группа": [], "Ед. изм.": [], "Цена, шт": [],'Количество':[], 'Сумма':[]}
+    for i in data:
+        inseting_data["Наименование"].append(i.tool.name)
+        inseting_data["Группа"].append(tools_query_iarch(db=db,parent_id=i.tool.parentid,name=None)[0].name)
+        inseting_data["Ед. изм."].append(' ')
+        inseting_data["Цена, шт"].append(i.tool.price)
+        inseting_data["Количество"].append(i.amount)
+
+        if i.amount is None:
+            i.amount = 0
+
+        inseting_data["Сумма"].append(i.amount*i.tool.price)
+    df = pd.DataFrame(data)
+
+    df.to_excel("files/output.xlsx", index=False)
+    return "files/output.xlsx"
