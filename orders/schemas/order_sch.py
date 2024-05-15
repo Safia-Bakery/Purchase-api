@@ -134,7 +134,7 @@ class ExpanditureUpdate(BaseModel):
     id: int
     status: Optional[int] = None
     comment: Optional[str] = None
-    tools: Dict[str, int]
+    tools: Optional[Dict[str, int]]=None
     class Config:
         orm_mode = True
 

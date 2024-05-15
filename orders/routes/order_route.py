@@ -18,7 +18,8 @@ from services import (
     getgroups,
     getproducts,
     authiiko,
-    list_departments
+    list_departments,
+    send_sms
 )
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
@@ -134,7 +135,23 @@ async def update_order(
     db: Session = Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)
 ):
-    return order_query.update_order(db, order)
+    query = order_query.update_order(db, order)
+    if order.status is not None:
+        if order.status == 1:
+            #send_sms(query.user.phone_number, "")
+            # send message to user
+            pass
+
+        if order.status == 2:
+            #send_sms(query.user.phone_number, "")
+            # send message to user
+            pass
+        if order.status == 3:
+            # send message to user
+            pass
+
+
+    return query
 
 
 
