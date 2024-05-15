@@ -241,12 +241,16 @@ def create_expanditure(db: Session, expanditure: order_sch.ExpanditureCreate):
     return db_expanditure.id
 
 
-def get_expanditure(db: Session, id,client_id):
+def get_expanditure(db: Session, id,client_id,branch_id,status):
     query = db.query(Expanditure)
     if id is not None:
         query = query.filter(Expanditure.id == id)
     if client_id is not None:
         query = query.filter(Expanditure.client_id==client_id)
+    if branch_id is not None:
+        query = query.filter(Expanditure.branch_id==branch_id)
+    if status is not None:
+        query = query.filter(Expanditure.status == status)
     return query.order_by(Expanditure.id.desc()).all()
 
 def update_expanditure(db:Session,form_data:order_sch.ExpanditureUpdate):

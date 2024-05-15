@@ -237,10 +237,13 @@ async def create_expanditure(
 @order_router.get("/expanditure", summary="Get expanditure",tags=["Expenditure"],response_model=Page[order_sch.Expanditure])
 async def get_expanditure_router(
     id: Optional[int] = None,
+    client_id: Optional[int] = None,
+    branch_id: Optional[int] = None,
+    status: Optional[int] = None,
     db: Session = Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)
 ):
-    return paginate(order_query.get_expanditure(db, id=id,client_id=None))
+    return paginate(order_query.get_expanditure(db, id=id,client_id=client_id,branch_id=branch_id,status=status))
 
 
 
