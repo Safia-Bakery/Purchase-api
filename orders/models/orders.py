@@ -45,6 +45,7 @@ class Orders(Base):
     product = Column(String,nullable=True)
     role = Column(String,nullable=True)
     sertificate = Column(String,nullable=True)
+    deny_reason = Column(String,nullable=True)
     brochure = Column(String,nullable=True) 
     category_id = Column(BIGINT, ForeignKey("categories.id"))
     category = relationship("Categories", back_populates="order")

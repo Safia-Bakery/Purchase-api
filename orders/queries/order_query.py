@@ -256,8 +256,17 @@ def get_expanditure(db: Session, id,client_id,branch_id,status):
 
 def update_expanditure(db:Session,form_data:order_sch.ExpanditureUpdate):
     query  = db.query(Expanditure).filter(Expanditure.id == form_data.id).first()
+    if query:
+        if form_data.status is not None:
+            query.status = form_data.status
+        if form_data.deny_reason is not None:
+            query.deny_reason = form_data.deny_reason
+        db.commit()
+        db.refresh(query)
+
     if form_data.tools is not None:
         # querydelete = db.query(ExpenditureTools).filter(ExpenditureTools.expenditure_id==query.id).delete()
+
         # db.commit()
         for key, value in form_data.tools.items():
             tool = db.query(Tools).filter(Tools.id == key).first()

@@ -125,6 +125,7 @@ class Expanditure(BaseModel):
     expendituretool: Optional[list[ExpanditureToolGet]] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+    deny_reason: Optional[str] = None
     class Config:
         orm_mode = True
 
@@ -133,8 +134,8 @@ class Expanditure(BaseModel):
 class ExpanditureUpdate(BaseModel):
     id: int
     status: Optional[int] = None
-    comment: Optional[str] = None
     tools: Optional[Dict[str, int]]=None
+    deny_reason: Optional[str] = None
     class Config:
         orm_mode = True
 
