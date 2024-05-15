@@ -23,9 +23,9 @@ from sqlalchemy.orm import Session
 import requests
 import database
 from fastapi import Depends
-from Bots.Purchasebot.services import transform_list
+from .services import  transform_list
 
-from Bots.Purchasebot.queries import crud
+from queries import crud
 
 FRONT_URL = 'https://super.purchase.safiabakery.uz/'
 
