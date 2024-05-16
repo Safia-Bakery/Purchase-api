@@ -48,7 +48,7 @@ def update_category(db: Session, category: order_sch.CategoryUpdate):
     return db_category 
 
 
-def create_order(db: Session,user_id,brend,product,role,sertificate,brochure,category_id,safia_worker,vat):
+def create_order(db: Session,user_id,brend,product,role,sertificate,brochure,category_id,safia_worker,price):
     db_order = Orders(
         user_id=user_id,
         brend=brend,
@@ -58,7 +58,7 @@ def create_order(db: Session,user_id,brend,product,role,sertificate,brochure,cat
         brochure=brochure,
         category_id=category_id,
         safia_worker=safia_worker,
-        vat=vat
+        price=price
     )
     db.add(db_order)
     db.commit()
