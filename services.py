@@ -260,17 +260,23 @@ def list_departments(key):
 def generate_excell(data,db):
     inseting_data = {"Наименование": [], "Группа": [], "Ед. изм.": [], "Цена, шт": [],'Количество':[], 'Сумма':[]}
     for i in data:
-        inseting_data["Наименование"].append(i.tool.name)
-        inseting_data["Группа"].append(tools_query_iarch(db=db,parent_id=i.tool.parentid,name=None)[0].name)
+        tool_name = str(i.tool.name)
+        group_name = str(tools_query_iarch(db=db,parent_id=i.tool.parentid,name=None)[0].name)
+
+        tool_price = i.tool.price
+        tool_amount = i.amount
+        tool_totalprice = i.amount*i.tool.price
+        inseting_data["Наименование"].append(tool_name)
+        inseting_data["Группа"].append(group_name)
         inseting_data["Ед. изм."].append(' ')
-        inseting_data["Цена, шт"].append(i.tool.price)
-        inseting_data["Количество"].append(i.amount)
+        inseting_data["Цена, шт"].append(tool_price)
+        inseting_data["Количество"].append(tool_amount)
 
         if i.amount is None:
             i.amount = 0
 
-        inseting_data["Сумма"].append(i.amount*i.tool.price)
-    df = pd.DataFrame(data)
+        inseting_data["Сумма"].append(tool_totalprice)
+    df = pd.DataFrame(inseting_data)
 
     df.to_excel("files/output.xlsx", index=False)
     return "files/output.xlsx"
