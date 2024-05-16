@@ -35,6 +35,16 @@ class Categories(Base):
     order = relationship("Orders", back_populates="category")
 
 
+class Files(Base):
+    __tablename__ = "files"
+    id = Column(BIGINT, primary_key=True, index=True)
+    url = Column(String,nullable=True)
+    order_id= Column(BIGINT, ForeignKey("orders.id"))
+    order = relationship("Orders", back_populates="file")
+    created_at = Column(DateTime(timezone=True), default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
 class Orders(Base):
     __tablename__ = "orders"
     id = Column(BIGINT, primary_key=True, index=True)
@@ -46,13 +56,21 @@ class Orders(Base):
     role = Column(String,nullable=True)
     sertificate = Column(String,nullable=True)
     deny_reason = Column(String,nullable=True)
-    brochure = Column(String,nullable=True) 
+    brochure = Column(String,nullable=True)
     category_id = Column(BIGINT, ForeignKey("categories.id"))
     category = relationship("Categories", back_populates="order")
     safia_worker = Column(Boolean,nullable=True)
     price = Column(Float,nullable=True)
     created_at = Column(DateTime(timezone=True), default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    file = relationship("Files", back_populates="order")
+
+
+
+
+
+
+
 
 
 

@@ -1,6 +1,6 @@
 from pydantic import BaseModel, validator
 from fastapi import Form, UploadFile, File
-from typing import Optional, Annotated, Dict
+from typing import Optional, Annotated, Dict,List
 from datetime import datetime, time
 from fastapi import Form
 from uuid import UUID
@@ -36,6 +36,9 @@ class GetCategory(BaseModel):
         orm_mode = True
 
 
+class Files(BaseModel):
+    id:int
+    url:str
 
 class GetOrders(BaseModel):
     id:int
@@ -46,8 +49,9 @@ class GetOrders(BaseModel):
     role: Optional[str] = None
     sertificate: Optional[str] = None
     brochure: Optional[str] = None
-    category_id: int
+    category_id: Optional[int]=None
     category: Optional[GetCategory] = None
+    file:Optional[list[Files]]=None
     safia_worker: Optional[bool] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None

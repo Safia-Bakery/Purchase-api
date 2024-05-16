@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException, status,Form,UploadFile
 from fastapi_pagination import paginate, Page, add_pagination
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from typing import Optional,Annotated
+from typing import Optional,Annotated,List
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from uuid import UUID
 from services import (
@@ -80,14 +80,15 @@ async def update_category(
 
 
 # from here you can create order
-@order_router.post("/order", summary="Create order",tags=["Order"])
+@order_router.post("/order", summary="Create order",tags=["Order"],response_model=order_sch.GetOrders)
 async def create_order(
+    category_id:Annotated[int, Form()],
     brend:Annotated[str, Form()]=None,
     product:Annotated[str, Form()]=None,
     role:Annotated[str, Form()]=None,
     sertificate:UploadFile = None,
+    product_images:List[UploadFile] = None,
     brochure:UploadFile = None,
-    category_id:Annotated[int, Form()]=None,
     safia_worker:Annotated[bool, Form()]=None,
     price:Annotated[float, Form()]=None,
     db: Session = Depends(get_db),
@@ -117,7 +118,22 @@ async def create_order(
         brochure = folder_name
     else:
         brochure = None
-    return order_query.create_order(db=db,price=price, user_id=current_user.id, brend=brend, product=product, role=role, sertificate=sertificate, brochure=brochure, category_id=category_id, safia_worker=safia_worker)
+
+    order_create = order_query.create_order(db=db,price=price, user_id=current_user.id, brend=brend, product=product, role=role, sertificate=sertificate, brochure=brochure, category_id=category_id, safia_worker=safia_worker)
+    if product_images is not None:
+        images = []
+        for image in product_images:
+            folder_name = f"files/{generate_random_filename()+image.filename}"
+            with open(folder_name, "wb") as buffer:
+                while True:
+                    chunk = await image.read(1024)
+                    if not chunk:
+                        break
+                    buffer.write(chunk)
+            images.append(folder_name)
+
+        order_query.create_images(db=db,order_id=order_create.id,images=images)
+    return order_create
 
 
 

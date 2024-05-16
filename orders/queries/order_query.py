@@ -8,7 +8,7 @@ from datetime import datetime,timedelta
 from sqlalchemy import or_, and_, Date, cast
 from orders.orderservices import  find_hierarchy
 from uuid import UUID
-from orders.models.orders import Orders, Categories, Branchs, Clients, ToolParents,Tools,Expanditure,ExpenditureTools
+from orders.models.orders import Orders, Categories, Branchs, Clients, ToolParents,Tools,Expanditure,ExpenditureTools,Files
 from orders.schemas import order_sch
 
 timezonetash = pytz.timezone("Asia/Tashkent")   
@@ -319,3 +319,14 @@ def update_expanditure_tools(db:Session,form_data:order_sch.ExpanditureTools):
         db.commit()
         db.refresh(query)
     return query
+
+def create_images(db: Session,order_id, images):
+    for image in images:
+        new_image = Files(
+            url=image,
+            order_id=order_id
+        )
+        db.add(new_image)
+        db.commit()
+
+    return True

@@ -6,19 +6,6 @@ from fastapi import Form
 from uuid import UUID
 
 
-class User(BaseModel):
-    id:int
-    address:Optional[str]=None
-    name: Optional[str]=None
-    inn: Optional[str]=None
-    email: Optional[str]=None
-    company_name: Optional[str]=None
-    phone: Optional[str]=None
-    status: int
-    created_at: Optional[datetime]=None
-    updated_at: Optional[datetime]=None
-    class Config:
-        orm_mode = True
 
 
 
@@ -56,6 +43,69 @@ class ResetPhone(BaseModel):
 
 class ResetPassword(BaseModel):
     password:str
+
+
+class Permissions(BaseModel):
+    id:int
+    name:Optional[str]=None
+    status:Optional[int]=None
+    description:Optional[str]=None
+    created_at: Optional[datetime]=None
+    updated_at: Optional[datetime]=None
+    class Config:
+        orm_mode = True
+
+
+class ParentPermissions(BaseModel):
+    id:int
+    name:Optional[str]=None
+    status:Optional[int]=None
+    description:Optional[str]=None
+    permission:Optional[list[Permissions]]=None
+    created_at: Optional[datetime]=None
+    updated_at: Optional[datetime]=None
+    class Config:
+        orm_mode = True
+
+
+class Accesses(BaseModel):
+    id:int
+    role_id:int
+    permission_id:int
+    status:Optional[int]=None
+    created_at: Optional[datetime]=None
+    updated_at: Optional[datetime]=None
+    class Config:
+        orm_mode = True
+
+
+class Roles(BaseModel):
+    id:int
+    name:Optional[str]=None
+    description:Optional[str]=None
+    status:Optional[int]=None
+    access:Optional[list[Accesses]]=None
+    created_at: Optional[datetime]=None
+    updated_at: Optional[datetime]=None
+    class Config:
+        orm_mode = True
+
+
+class User(BaseModel):
+    id:int
+    address:Optional[str]=None
+    name: Optional[str]=None
+    inn: Optional[str]=None
+    email: Optional[str]=None
+    company_name: Optional[str]=None
+    phone: Optional[str]=None
+    status: int
+    #role: Optional[Roles]=None
+    created_at: Optional[datetime]=None
+    updated_at: Optional[datetime]=None
+    class Config:
+        orm_mode = True
+
 
 
 
