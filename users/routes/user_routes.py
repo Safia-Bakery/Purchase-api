@@ -87,7 +87,13 @@ async def register(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid data",
         )
-    user = query.user_create(db=db, user=form_data)
+    try:
+        user = query.user_create(db=db, user=form_data)
+    except:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="already have an account",
+        )
     randomnumber = random.randint(100000,999999)
     query.user_update(db=db,id=user.id,otp=randomnumber,status=0)
 
