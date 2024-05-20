@@ -162,3 +162,20 @@ class ExpanditureTools(BaseModel):
         orm_mode = True
 
 
+
+class FileItem(BaseModel):
+    name: str
+    content: str
+
+class CreateOrderJson(BaseModel):
+    category_id: int
+    brend: Optional[str] = None
+    product: Optional[str] = None
+    role: Optional[str] = None
+    sertificate: Optional[FileItem] = None
+    product_images: Optional[List[FileItem]]=None
+    brochure: Optional[FileItem] = None
+    safia_worker: Optional[bool] = None
+    price: Optional[float] = None
+    class Config:
+        orm_mode = True

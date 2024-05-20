@@ -98,7 +98,7 @@ async def register(
     query.user_update(db=db,id=user.id,otp=randomnumber,status=0)
 
     if user.phone is not None:
-        send_sms(user.phone,randomnumber)
+        send_sms(user.phone,f"Код подтверждения для сайта Safia Purchase: {randomnumber}")
     elif user.email is not None:
         send_email(user.email,randomnumber)
     #current_user: user_sch.User = Depends(get_current_user)
@@ -160,7 +160,7 @@ async def forgot_password(
         else:
             query.user_update(db=db,id=user.id,otp=randomnumber)
         if form_data.phone_number is not None:
-            send_sms(user.phone,randomnumber)
+            send_sms(user.phone,f"Код подтверждения для сайта Safia Purchase: {randomnumber}")
         if form_data.email is not None:
             send_email(form_data.email, randomnumber)
         return {"message":"OTP sent"}

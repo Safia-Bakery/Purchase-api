@@ -87,7 +87,7 @@ async def create_order(
     product:Annotated[str, Form()]=None,
     role:Annotated[str, Form()]=None,
     sertificate:UploadFile = None,
-    product_images:List[UploadFile] = None,
+    product_images:List[UploadFile] = File(...),
     brochure:UploadFile = None,
     safia_worker:Annotated[bool, Form()]=None,
     price:Annotated[float, Form()]=None,
@@ -159,16 +159,16 @@ async def update_order(
     query = order_query.update_order(db, order)
     if order.status is not None:
         if order.status == 1:
-            #send_sms(query.user.phone_number, "")
+            send_sms(query.user.phone_number, f"Уважаемый {query.user.name}, ваша заявка принята в работу, в скором времени с вами свяжется наш менеджер.")
             # send message to user
             pass
 
         if order.status == 2:
-            #send_sms(query.user.phone_number, "")
+            send_sms(query.user.phone_number, "Ваша заявка обработана. Для дальнейшего обсуждения сотрудничества с вами свяжется менеджер нашего отдела закупок.")
             # send message to user
             pass
         if order.status == 3:
-            # send message to user
+            send_sms(query.user.phone_number, f"К сожалению, ваша заявка была отклонена по причине {query.deny_reason}. С уважением, Отдел закупок, Safia.")
             pass
 
 
