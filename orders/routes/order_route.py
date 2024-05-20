@@ -258,7 +258,14 @@ async def create_expanditure(
     form_data: order_sch.ExpanditureCreate,
     db: Session = Depends(get_db)
 ):
-    return {'success':True,'id':order_query.create_expanditure(db, form_data)}
+    try:
+        query = order_query.create_expanditure(db, form_data)
+        return query
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        )
 
 
 @order_router.get("/expanditure", summary="Get expanditure",tags=["Expenditure"],response_model=Page[order_sch.Expanditure])
