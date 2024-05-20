@@ -300,8 +300,8 @@ async def get_expanditure_router(
                 total_sum += i.amount * i.tool.price
             except:
                 pass
-    query.items[0].total_sum = total_sum
 
+        query.items[0].total_sum = "{:.2f}".format(total_sum)
     return query
 
 
