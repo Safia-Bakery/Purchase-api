@@ -330,3 +330,39 @@ def create_images(db: Session,order_id, images):
         db.commit()
 
     return True
+
+def update_products_price(db: Session, prices):
+        for i in prices:
+
+            id = i["product"]
+            store_id = i['store']
+
+            if i['sum'] == 0:
+                price = 0
+            else:
+                price = i['sum'] / i['amount']
+
+
+            query = db.query(Tools).filter(Tools.iikoid == id).first()
+            if query:
+                query.total_price = i['sum']
+                query.amount_left = i['amount']
+                query.price = price
+                query.last_update = datetime.now(timezonetash)
+                db.commit()
+
+        return True
+
+def update_measure_unit(db:Session,measure_units):
+    for i in measure_units:
+        id = i.find('id').text
+        try:
+            mainunit = i.find('mainUnit').text
+        except:
+            mainunit = None
+        
+        query = db.query(Tools).filter(Tools.iikoid == id).first()
+        if query:
+            query.mainunit = mainunit
+            db.commit()
+    return True

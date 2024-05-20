@@ -1,3 +1,18 @@
+from datetime import datetime
+import pytz
+timezonetash = pytz.timezone("Asia/Tashkent")
+
+import requests
+from dotenv import load_dotenv
+import os
+import xml.etree.ElementTree as ET
+load_dotenv()
+
+BASE_URL = os.getenv("BASE_URL")
+
+
+
+
 def find_hierarchy(data, parent_id):
     def dfs(current_id):
         result = []
@@ -31,3 +46,25 @@ def find_hierarchy(data, parent_id):
         }] + dfs(parent_id)
     else:
         return []
+
+
+
+def get_prices(key,department_id):
+    current_date = datetime.now(timezonetash).strftime("%Y-%m-%d")
+    prices = requests.get(f"{BASE_URL}/resto/api/v2/reports/balance/stores?timestamp={current_date}&department={department_id}&key={key}")
+    return prices.json()
+
+
+
+
+def get_productsmainunit(key):
+    products = requests.get(f"{BASE_URL}/resto/api/v2/products?key={key}")
+    products = ET.fromstring(products.content)
+    products = products.findall("productDto")
+    return products
+
+
+
+
+
+

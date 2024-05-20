@@ -22,6 +22,7 @@ from services import (
     send_sms,
 generate_excell
 )
+from ..orderservices import get_prices,get_productsmainunit
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Union, Any
@@ -196,7 +197,16 @@ async def synch_expenditure(
     products = getproducts(key=key)
     product_list = order_query.synchproducts(db, grouplist=group_list, products=products)
     del products
-    return {"message":"Hello world"}
+    prices = get_prices(key=key,department_id='fe7dce09-c2d4-46b9-bab1-86be331ed641')
+    order_query.update_products_price(db=db,prices=prices)
+    del prices
+    prices = get_prices(key=key,department_id='c39aa435-8cdf-4441-8723-f532797fbeb9')
+    order_query.update_products_price(db=db,prices=prices)
+    del prices
+    mainunits = get_productsmainunit(key=key)
+    order_query.update_measure_unit(db=db,measure_units=mainunits)
+    del mainunits
+    return {"message":"Hello world",'success':True}
 
 
 

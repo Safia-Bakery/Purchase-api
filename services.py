@@ -265,10 +265,11 @@ def generate_excell(data,db):
 
         tool_price = i.tool.price
         tool_amount = i.amount
+        tool_mainunit = i.tool.mainunit
         tool_totalprice = i.amount*i.tool.price
         inseting_data["Наименование"].append(tool_name)
         inseting_data["Группа"].append(group_name)
-        inseting_data["Ед. изм."].append(' ')
+        inseting_data["Ед. изм."].append(tool_mainunit)
         inseting_data["Цена, шт"].append(tool_price)
         inseting_data["Количество"].append(tool_amount)
 
