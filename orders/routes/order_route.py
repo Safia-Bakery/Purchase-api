@@ -335,7 +335,9 @@ async def get_excell(
 @order_router.post('/v1/files',summary='upload files',tags=['Files'])
 async def upload_files(
     files:List[UploadFile] = File(...),
-    db:Session=Depends(get_db)):
+    db:Session=Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
     images = []
     for image in files:
         folder_name = f"files/{generate_random_filename()+image.filename}"
@@ -353,7 +355,10 @@ async def upload_files(
 @order_router.delete('/v1/files',summary='delete files',tags=['Files'])
 async def delete_files(
     form_data:order_sch.DeleteFile,
-    db:Session=Depends(get_db)):
+    db:Session=Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+
+):
     return order_query.delete_file(db=db,id=form_data.id)
 
 
