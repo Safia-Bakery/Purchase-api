@@ -275,7 +275,6 @@ def generate_excell(data,db):
 
         if i.amount is None:
             i.amount = 0
-
         inseting_data["Сумма"].append(tool_totalprice)
     df = pd.DataFrame(inseting_data)
 

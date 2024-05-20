@@ -130,6 +130,7 @@ class Expanditure(BaseModel):
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
     deny_reason: Optional[str] = None
+    total_sum: Optional[float] = None
     class Config:
         orm_mode = True
 

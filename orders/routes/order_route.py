@@ -292,7 +292,17 @@ async def get_expanditure_router(
     db: Session = Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)
 ):
-    return paginate(order_query.get_expanditure(db, id=id,client_id=client_id,branch_id=branch_id,status=status))
+    query = paginate(order_query.get_expanditure(db, id=id,client_id=client_id,branch_id=branch_id,status=status))
+    total_sum = 0
+    if id is not None:
+        for i in query.items[0].expendituretool:
+            try:
+                total_sum += i.amount * i.tool.price
+            except:
+                pass
+    query.items[0].total_sum = total_sum
+
+    return query
 
 
 
@@ -314,6 +324,7 @@ async def delete_cart_items(
 async def get_order_router(
     client_id:int,
     db:Session=Depends(get_db)):
+
     return paginate(order_query.get_expanditure(db=db,client_id=client_id,id=None))
 
 
@@ -322,7 +333,9 @@ async def get_order_router(
 async def update_expanditure_tools(
     form_data:order_sch.ExpanditureTools,
     db:Session=Depends(get_db)):
-    return order_query.update_expanditure_tools(db=db,form_data=form_data)
+    query =order_query.update_expanditure_tools(db=db,form_data=form_data)
+    return query
+
 
 
 @order_router.get('/expanditure/excell',summary='get excell',tags=['Expenditure'])
