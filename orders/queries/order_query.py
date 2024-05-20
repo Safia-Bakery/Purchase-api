@@ -8,7 +8,7 @@ from datetime import datetime,timedelta
 from sqlalchemy import or_, and_, Date, cast
 from orders.orderservices import  find_hierarchy
 from uuid import UUID
-from orders.models.orders import Orders, Categories, Branchs, Clients, ToolParents,Tools,Expanditure,ExpenditureTools,Files
+from orders.models.orders import Orders, Categories, Branchs, Clients, ToolParents,Tools,Expanditure,ExpenditureTools,Files,FilesRelations
 from orders.schemas import order_sch
 
 timezonetash = pytz.timezone("Asia/Tashkent")   
@@ -48,14 +48,12 @@ def update_category(db: Session, category: order_sch.CategoryUpdate):
     return db_category 
 
 
-def create_order(db: Session,user_id,brend,product,role,sertificate,brochure,category_id,safia_worker,price):
+def create_order(db: Session,user_id,brend,product,role,category_id,safia_worker,price):
     db_order = Orders(
         user_id=user_id,
         brend=brend,
         product=product,
         role=role,
-        sertificate=sertificate,
-        brochure=brochure,
         category_id=category_id,
         safia_worker=safia_worker,
         price=price
@@ -65,14 +63,12 @@ def create_order(db: Session,user_id,brend,product,role,sertificate,brochure,cat
     db.refresh(db_order)
     return db_order
 
-def get_orders(db: Session,user_id,status,id):
+def get_orders(db: Session,user_id,status):
     query = db.query(Orders)
     if user_id is not None:
         query = query.filter(Orders.user_id == user_id)
     if status is not None:
         query = query.filter(Orders.status == status)
-    if id is not None:
-        query = query.filter(Orders.id == id)
     return query.order_by(Orders.id.desc()).all()
 
 
@@ -366,3 +362,34 @@ def update_measure_unit(db:Session,measure_units):
             query.mainunit = mainunit
             db.commit()
     return True
+
+
+def file_create(db:Session, url):
+    new_file = Files(
+        url=url
+    )
+    db.add(new_file)
+    db.commit()
+    db.refresh(new_file)
+    return new_file
+
+def delete_file(db:Session, id):
+    query = db.query(Files).filter(Files.id==id).delete()
+    db.commit()
+    return query
+
+
+def file_relations(db:Session, order_id, file_id,type):
+    new_file = FilesRelations(
+        order_id=order_id,
+        file_id=file_id,
+        type=type
+    )
+    db.add(new_file)
+    db.commit()
+    db.refresh(new_file)
+    return new_file
+
+
+def get_order_by_id(db:Session, order_id):
+    return db.query(Orders).filter(Orders.id == order_id).first()

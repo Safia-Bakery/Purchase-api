@@ -83,58 +83,18 @@ async def update_category(
 # from here you can create order
 @order_router.post("/order", summary="Create order",tags=["Order"],response_model=order_sch.GetOrders)
 async def create_order(
-    category_id:Annotated[int, Form()],
-    brend:Annotated[str, Form()]=None,
-    product:Annotated[str, Form()]=None,
-    role:Annotated[str, Form()]=None,
-    sertificate:UploadFile = None,
-    product_images:List[UploadFile] = File(...),
-    brochure:UploadFile = None,
-    safia_worker:Annotated[bool, Form()]=None,
-    price:Annotated[float, Form()]=None,
+    form_data:order_sch.OrderCreate,
     db: Session = Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)
 ):
 
-    if sertificate is not None:
-        # for file in image:
-        folder_name = f"files/{generate_random_filename()+sertificate.filename}"
-        with open(folder_name, "wb") as buffer:
-            while True:
-                chunk = await sertificate.read(1024)
-                if not chunk:
-                    break
-                buffer.write(chunk)
-        sertificate = folder_name
-    else:
-        sertificate = None
-    if brochure is not None:
-        # for file in image:
-        folder_name = f"files/{generate_random_filename()+brochure.filename}"
-        with open(folder_name, "wb") as buffer:
-            while True:
-                chunk = await brochure.read(1024)
-                if not chunk:
-                    break
-                buffer.write(chunk)
-        brochure = folder_name
-    else:
-        brochure = None
-
-    order_create = order_query.create_order(db=db,price=price, user_id=current_user.id, brend=brend, product=product, role=role, sertificate=sertificate, brochure=brochure, category_id=category_id, safia_worker=safia_worker)
-    if product_images is not None:
-        images = []
-        for image in product_images:
-            folder_name = f"files/{generate_random_filename()+image.filename}"
-            with open(folder_name, "wb") as buffer:
-                while True:
-                    chunk = await image.read(1024)
-                    if not chunk:
-                        break
-                    buffer.write(chunk)
-            images.append(folder_name)
-
-        order_query.create_images(db=db,order_id=order_create.id,images=images)
+    order_create = order_query.create_order(db=db,price=form_data.price, user_id=current_user.id, brend=form_data.brend, product=form_data.product, role=form_data.role,  category_id=form_data.category_id, safia_worker=form_data.safia_worker)
+    for i in form_data.brochures:
+        order_query.file_relations(db=db,order_id=order_create.id,file_id=i,type='brochures')
+    for i in form_data.sertificates:
+        order_query.file_relations(db=db,order_id=order_create.id,file_id=i,type='sertificates')
+    for i in form_data.product_images:
+        order_query.file_relations(db=db,order_id=order_create.id,file_id=i,type='product_images')
     return order_create
 
 
@@ -146,10 +106,28 @@ async def create_order(
 async def get_orders(
     user_id: Optional[int] = None,
     status: Optional[int] = None,
-    id: Optional[int] = None,
     db: Session = Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)):
-    return paginate(order_query.get_orders(db,user_id= user_id, status=status,id=id))
+    return paginate(order_query.get_orders(db,user_id= user_id, status=status))
+
+
+
+@order_router.get("/order/{order_id}", summary="Get order by id",tags=["Order"],response_model=order_sch.GetOrderById)
+async def get_order_by_id(
+    order_id: int,
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
+    data_dict = {}
+    query = order_query.get_order_by_id(db, order_id)
+    for i in query.file:
+        if_keyexist = data_dict.get(i.type)
+        if not if_keyexist:
+            data_dict[i.type]  = []
+        data_dict[i.type].append({'id':i.file.id,'url':i.file.url})
+    for i in data_dict.keys():
+        query.__setattr__(i,data_dict[i])
+    return query
 
 @order_router.put("/order", summary="Update order",tags=["Order"])
 async def update_order(
@@ -354,6 +332,28 @@ async def get_excell(
             detail="No data found",
         )
 
+@order_router.post('/v1/files',summary='upload files',tags=['Files'])
+async def upload_files(
+    files:List[UploadFile] = File(...),
+    db:Session=Depends(get_db)):
+    images = []
+    for image in files:
+        folder_name = f"files/{generate_random_filename()+image.filename}"
+        with open(folder_name, "wb") as buffer:
+            while True:
+                chunk = await image.read(1024)
+                if not chunk:
+                    break
+                buffer.write(chunk)
+        filedata = order_query.file_create(db=db,url=folder_name)
+        images.append({'id':filedata.id,'url':folder_name})
+    return {'success':True,'files':images}
 
+
+@order_router.delete('/v1/files',summary='delete files',tags=['Files'])
+async def delete_files(
+    form_data:order_sch.DeleteFile,
+    db:Session=Depends(get_db)):
+    return order_query.delete_file(db=db,id=form_data.id)
 
 

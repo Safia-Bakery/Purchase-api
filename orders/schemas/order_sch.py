@@ -30,8 +30,6 @@ class GetCategory(BaseModel):
     name_uz: str
     name_ru: str
     status: int
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
     class Config:
         orm_mode = True
 
@@ -47,20 +45,52 @@ class GetOrders(BaseModel):
     brend: Optional[str] = None
     product: Optional[str] = None
     role: Optional[str] = None
-    sertificate: Optional[str] = None
-    brochure: Optional[str] = None
     category_id: Optional[int]=None
     category: Optional[GetCategory] = None
-    file:Optional[list[Files]]=None
+    safia_worker: Optional[bool] = None
+    user:Optional[user_sch.User] = None
+    price: Optional[float] = None
+
+    class Config:
+        orm_mode = True
+
+
+class GetOrderById(BaseModel):
+    id:int
+    user_id: int
+    status: int
+    brend: Optional[str] = None
+    product: Optional[str] = None
+    role: Optional[str] = None
+    category_id: Optional[int]=None
+    category: Optional[GetCategory] = None
     safia_worker: Optional[bool] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
     user:Optional[user_sch.User] = None
     price: Optional[float] = None
+    product_images: Optional[List[dict]]=None
+    brochures: Optional[List[dict]] = None
+    sertificates: Optional[List[dict]] = None
     class Config:
         orm_mode = True
 
 #test
+
+
+class OrderCreate(BaseModel):
+    brend: Optional[str] = None
+    product: Optional[str] = None
+    role: Optional[str] = None
+    category_id: Optional[int] = None
+    safia_worker: Optional[bool] = None
+    price: Optional[float] = None
+    product_images: Optional[List[int]]=None
+    brochures: Optional[List[int]] = None
+    sertificates: Optional[List[int]] = None
+    class Config:
+        orm_mode = True
+
 
 #newtest
 class OrderUpdate(BaseModel):
@@ -180,3 +210,7 @@ class CreateOrderJson(BaseModel):
     price: Optional[float] = None
     class Config:
         orm_mode = True
+
+
+class DeleteFile(BaseModel):
+    id:int

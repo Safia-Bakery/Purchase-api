@@ -39,10 +39,23 @@ class Files(Base):
     __tablename__ = "files"
     id = Column(BIGINT, primary_key=True, index=True)
     url = Column(String,nullable=True)
-    order_id= Column(BIGINT, ForeignKey("orders.id"))
+    created_at = Column(DateTime(timezone=True), default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    relation = relationship("FilesRelations", back_populates="file")
+
+
+
+class FilesRelations(Base):
+    __tablename__ = "files_relations"
+    id = Column(BIGINT, primary_key=True, index=True)
+    file_id = Column(BIGINT, ForeignKey("files.id"))
+    file = relationship("Files", back_populates="relation")
+    order_id = Column(BIGINT, ForeignKey("orders.id"))
+    type = Column(String,nullable=True)
     order = relationship("Orders", back_populates="file")
     created_at = Column(DateTime(timezone=True), default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
 
 
 class Orders(Base):
@@ -54,16 +67,14 @@ class Orders(Base):
     brend = Column(String,nullable=True)  
     product = Column(String,nullable=True)
     role = Column(String,nullable=True)
-    sertificate = Column(String,nullable=True)
     deny_reason = Column(String,nullable=True)
-    brochure = Column(String,nullable=True)
     category_id = Column(BIGINT, ForeignKey("categories.id"))
     category = relationship("Categories", back_populates="order")
     safia_worker = Column(Boolean,nullable=True)
     price = Column(Float,nullable=True)
     created_at = Column(DateTime(timezone=True), default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    file = relationship("Files", back_populates="order")
+    file = relationship("FilesRelations", back_populates="order")
 
 
 

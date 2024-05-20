@@ -101,8 +101,6 @@ class User(BaseModel):
     phone: Optional[str]=None
     status: int
     #role: Optional[Roles]=None
-    created_at: Optional[datetime]=None
-    updated_at: Optional[datetime]=None
     class Config:
         orm_mode = True
 
