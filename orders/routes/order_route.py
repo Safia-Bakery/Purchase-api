@@ -137,18 +137,15 @@ async def update_order(
 ):
     query = order_query.update_order(db, order)
     if order.status is not None:
-        if order.status == 1:
+        if query.status == 1:
             send_sms(query.user.phone_number, f"Уважаемый {query.user.name}, ваша заявка принята в работу, в скором времени с вами свяжется наш менеджер.")
             # send message to user
-            pass
 
-        if order.status == 2:
+        if query.status == 2:
             send_sms(query.user.phone_number, "Ваша заявка обработана. Для дальнейшего обсуждения сотрудничества с вами свяжется менеджер нашего отдела закупок.")
             # send message to user
-            pass
-        if order.status == 3:
+        if query.status == 3:
             send_sms(query.user.phone_number, f"К сожалению, ваша заявка была отклонена по причине {query.deny_reason}. С уважением, Отдел закупок, Safia.")
-            pass
 
 
     return query
