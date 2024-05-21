@@ -64,6 +64,19 @@ def get_productsmainunit(key):
     return products
 
 
+def sort_list_with_keys_at_end(data, keys_list):
+    # Separate the keys that need to be moved to the end
+    keys_to_move = [item for item in data if item.name in keys_list]
+    other_items = [item for item in data if item.name not in keys_list]
+
+    # Sort the other items
+    sorted_other_items = sorted(other_items)
+
+    # Concatenate the sorted items with the keys to move
+    final_sorted_list = sorted_other_items + keys_to_move
+
+    return final_sorted_list
+
 
 
 
