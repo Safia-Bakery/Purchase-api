@@ -76,6 +76,8 @@ def update_order(db: Session, order: order_sch.OrderUpdate):
     db_order = db.query(Orders).filter(Orders.id == order.id).first()
     if order.status is not None:
         db_order.status = order.status
+    if order.deny_reason is not None:
+        db_order.deny_reason = order.deny_reason
     db.commit()
     db.refresh(db_order)
     return db_order

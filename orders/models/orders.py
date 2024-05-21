@@ -78,15 +78,6 @@ class Orders(Base):
 
 
 
-
-
-
-
-
-
-
-
-
 class Branchs(Base):
     __tablename__ = "branchs"
     id = Column(BIGINT, primary_key=True, index=True)

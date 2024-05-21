@@ -96,6 +96,7 @@ class OrderCreate(BaseModel):
 class OrderUpdate(BaseModel):
     id:int
     status: Optional[int] = None
+    deny_reason: Optional[str] = None
 
 
 
