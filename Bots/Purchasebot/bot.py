@@ -146,7 +146,7 @@ async def orderlist(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
 def main() -> None:
     """Run the bot."""
     # Create the Application and pass it your bot's token.
-    persistence = PicklePersistence(filepath="/var/www/Purchase-api/Bots/Purchasebot/conversationbot")
+    persistence = PicklePersistence(filepath="conversationbot")
     application = Application.builder().token(BOTTOKEN).persistence(persistence).build()
     #add states phone fullname category desction and others 
     conv_handler = ConversationHandler(
