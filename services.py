@@ -270,7 +270,7 @@ def generate_excell(data,db):
         inseting_data["Ед. изм."].append(tool_mainunit)
         inseting_data["Цена, шт"].append(tool_price)
         inseting_data["Количество"].append(tool_amount)
-        inseting_data["артикул"].append(i.tool.num)
+        inseting_data["Aртикуль"].append(i.tool.num)
 
         if i.amount is None:
             i.amount = 0
