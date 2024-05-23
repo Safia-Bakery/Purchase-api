@@ -258,7 +258,7 @@ def list_departments(key):
 
 
 def generate_excell(data,db):
-    inseting_data = {"Наименование": [],  "Ед. изм.": [], "Цена, шт": [],'Количество':[], 'Сумма':[],"артикул":[]}
+    inseting_data = {"Наименование": [],"Aртикуль":[],  "Ед. изм.": [], "Цена, шт": [],'Количество':[], 'Сумма':[]}
     for i in data:
         tool_name = str(i.tool.name)
 
