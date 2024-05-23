@@ -258,17 +258,15 @@ def list_departments(key):
 
 
 def generate_excell(data,db):
-    inseting_data = {"Наименование": [], "Группа": [], "Ед. изм.": [], "Цена, шт": [],'Количество':[], 'Сумма':[],"артикул":[]}
+    inseting_data = {"Наименование": [],  "Ед. изм.": [], "Цена, шт": [],'Количество':[], 'Сумма':[],"артикул":[]}
     for i in data:
         tool_name = str(i.tool.name)
-        group_name = str(tools_query_iarch(db=db,parent_id=i.tool.parentid,name=None)[0].name)
 
         tool_price = i.tool.price
         tool_amount = i.amount
         tool_mainunit = i.tool.mainunit
         tool_totalprice = i.amount*i.tool.price
         inseting_data["Наименование"].append(tool_name)
-        inseting_data["Группа"].append(group_name)
         inseting_data["Ед. изм."].append(tool_mainunit)
         inseting_data["Цена, шт"].append(tool_price)
         inseting_data["Количество"].append(tool_amount)
