@@ -144,6 +144,7 @@ class ExpanditureToolGet(BaseModel):
     tool_id: int
     tool: Optional[Tools] = None
     amount: int
+    code:Optional[str] = None
     class Config:
         orm_mode = True
     
