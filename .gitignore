@@ -9,7 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/sudo apt install python3.10-distutils
-
+conversationbot
 files/
 develop-eggs/
 dist/
