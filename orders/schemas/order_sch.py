@@ -127,6 +127,8 @@ class Tools(BaseModel):
     iiko_id: Optional[str] = None
     price: Optional[float]=None
     mainunit: Optional[str]=None
+    code:Optional[str] = None
+
     class Config:
         orm_mode = True
 
@@ -144,7 +146,6 @@ class ExpanditureToolGet(BaseModel):
     tool_id: int
     tool: Optional[Tools] = None
     amount: int
-    code:Optional[str] = None
     class Config:
         orm_mode = True
     
