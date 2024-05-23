@@ -126,6 +126,7 @@ class Tools(BaseModel):
     status: Optional[int] = 1
     iiko_id: Optional[str] = None
     price: Optional[float]=None
+    num : Optional[str] = None
     mainunit: Optional[str]=None
     code:Optional[str] = None
 
