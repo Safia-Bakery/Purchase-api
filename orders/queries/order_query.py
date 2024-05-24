@@ -416,3 +416,8 @@ def update_tools(db:Session,form_data:order_sch.UpdateTool):
         db.commit()
         db.refresh(query)
     return query
+
+
+def get_tools(db:Session,id):
+    query = db.query(Tools).filter(Tools.id == id).first()
+    return query

@@ -378,3 +378,13 @@ async def update_tools(
     current_user: user_sch.User = Depends(get_current_user)
 ):
     return order_query.update_tools(db=db,form_data=form_data)
+
+
+
+@order_router.get('/v1/tools',summary='get tools',tags=['Tools'],response_model=order_sch.Tools)
+async def get_tools(
+    id: Optional[int] = None,
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+    ):
+    return order_query.get_tools(db,id=id)
