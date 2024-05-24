@@ -222,11 +222,6 @@ class DeleteFile(BaseModel):
 
 
 class UpdateTool(BaseModel):
-    id:int
-    name: Optional[str] = None
-    status: Optional[int] = None
-    price: Optional[float]=None
-    mainunit: Optional[str]=None
-    code:Optional[str] = None
+    data : Dict[str, int]
     class Config:
         orm_mode = True

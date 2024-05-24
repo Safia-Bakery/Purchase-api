@@ -377,7 +377,14 @@ async def update_tools(
     db:Session=Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)
 ):
-    return order_query.update_tools(db=db,form_data=form_data)
+    for i in form_data.data.keys():
+        try:
+            id = int(i)
+            price = form_data.data[i]
+            order_query.update_tools(db=db, id=id, price=price)
+        except:
+            pass
+    return {'success':True,'message':'Updated successfully'}
 
 
 

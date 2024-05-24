@@ -400,19 +400,10 @@ def get_order_by_id(db:Session, order_id):
 
 
 
-def update_tools(db:Session,form_data:order_sch.UpdateTool):
-    query = db.query(Tools).filter(Tools.id==form_data.id).first()
+def update_tools(db:Session,id,price):
+    query = db.query(Tools).filter(Tools.id==id).first()
     if query:
-        if form_data.price is not None:
-            query.price = form_data.price
-        if form_data.mainunit is not None:
-            query.mainunit = form_data.mainunit
-        if form_data.status is not None:
-            query.status = form_data.status
-        if form_data.name is not None:
-            query.name = form_data.name
-        if form_data.code is not None:
-            query.code = form_data.code
+        query.price = price
         db.commit()
         db.refresh(query)
     return query
