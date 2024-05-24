@@ -342,7 +342,8 @@ def update_products_price(db: Session, prices):
 
 
             query = db.query(Tools).filter(Tools.iikoid == id).first()
-            if query:
+
+            if query and query.price ==0:
                 query.total_price = i['sum']
                 query.amount_left = i['amount']
                 query.price = price
@@ -395,3 +396,23 @@ def file_relations(db:Session, order_id, file_id,type):
 
 def get_order_by_id(db:Session, order_id):
     return db.query(Orders).filter(Orders.id == order_id).first()
+
+
+
+
+def update_tools(db:Session,form_data:order_sch.UpdateTool):
+    query = db.query(Tools).filter(Tools.id==form_data.id).first()
+    if query:
+        if form_data.price is not None:
+            query.price = form_data.price
+        if form_data.mainunit is not None:
+            query.mainunit = form_data.mainunit
+        if form_data.status is not None:
+            query.status = form_data.status
+        if form_data.name is not None:
+            query.name = form_data.name
+        if form_data.code is not None:
+            query.code = form_data.code
+        db.commit()
+        db.refresh(query)
+    return query

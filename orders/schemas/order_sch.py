@@ -219,3 +219,14 @@ class CreateOrderJson(BaseModel):
 
 class DeleteFile(BaseModel):
     id:int
+
+
+class UpdateTool(BaseModel):
+    id:int
+    name: Optional[str] = None
+    status: Optional[int] = None
+    price: Optional[float]=None
+    mainunit: Optional[str]=None
+    code:Optional[str] = None
+    class Config:
+        orm_mode = True

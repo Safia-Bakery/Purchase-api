@@ -185,6 +185,10 @@ async def synch_expenditure(
 
 
 
+
+
+
+
 @order_router.get("/clients",response_model=Page[order_sch.Clients])
 async def get_clients(
     name: Optional[str] = None,
@@ -366,3 +370,11 @@ async def delete_files(
     return order_query.delete_file(db=db,id=form_data.id)
 
 
+
+@order_router.put('/v1/tools',summary='update tools',tags=['Tools'])
+async def update_tools(
+    form_data:order_sch.UpdateTool,
+    db:Session=Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
+    return order_query.update_tools(db=db,form_data=form_data)
