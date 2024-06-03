@@ -89,12 +89,16 @@ async def create_order(
 ):
 
     order_create = order_query.create_order(db=db,price=form_data.price, user_id=current_user.id, brend=form_data.brend, product=form_data.product, role=form_data.role,  category_id=form_data.category_id, safia_worker=form_data.safia_worker)
-    for i in form_data.brochures:
-        order_query.file_relations(db=db,order_id=order_create.id,file_id=i,type='brochures')
-    for i in form_data.sertificates:
-        order_query.file_relations(db=db,order_id=order_create.id,file_id=i,type='sertificates')
-    for i in form_data.product_images:
-        order_query.file_relations(db=db,order_id=order_create.id,file_id=i,type='product_images')
+    if form_data.brochures is not None:
+        for i in form_data.brochures:
+            order_query.file_relations(db=db,order_id=order_create.id,file_id=i,type='brochures')
+    if form_data.sertificates is not None:
+
+        for i in form_data.sertificates:
+            order_query.file_relations(db=db,order_id=order_create.id,file_id=i,type='sertificates')
+    if form_data.product_images is not None:
+        for i in form_data.product_images:
+            order_query.file_relations(db=db,order_id=order_create.id,file_id=i,type='product_images')
     return order_create
 
 
