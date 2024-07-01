@@ -407,14 +407,14 @@ async def get_tools(
 
 @order_router.get('/v1/orders/excell',summary='get excell',tags=['Order'])
 async def get_excell(
-    status : Optional[int] = None,
+    order_status : Optional[int] = None,
     from_date : Optional[date] = None,
     to_date : Optional[date] = None,
     db:Session=Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)
 ):
     query = order_query.get_orders_excell_generation(db=db,
-                                                     status=status,
+                                                     status=order_status,
                                                      from_date=from_date,
                                                      to_date=to_date)
     if query:
