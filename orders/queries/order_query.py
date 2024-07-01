@@ -412,3 +412,12 @@ def update_tools(db:Session,id,price):
 def get_tools(db:Session,id):
     query = db.query(Tools).filter(Tools.id == id).first()
     return query
+
+
+def get_orders_excell_generation(db:Session,status,from_date,to_date):
+    query = db.query(Orders)
+    if status is not None:
+        query = query.filter(Orders.status == status)
+    if from_date is not None and to_date is not None:
+        query = query.filter(Orders.created_at >= from_date).filter(Orders.created_at <= to_date)
+    return query.all()

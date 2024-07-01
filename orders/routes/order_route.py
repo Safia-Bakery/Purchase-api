@@ -20,7 +20,8 @@ from services import (
     authiiko,
     list_departments,
     send_sms,
-generate_excell
+generate_excell,
+generate_excell_order_list
 )
 from ..orderservices import get_prices,get_productsmainunit
 from typing import Optional
@@ -32,6 +33,7 @@ from orders.queries import order_query
 from orders.schemas import order_sch   
 from users.schemas import user_sch 
 from dotenv import load_dotenv
+from datetime import date
 import os
 load_dotenv()
 
@@ -332,6 +334,7 @@ async def update_expanditure_tools(
 async def get_excell(
     id:Optional[int]=None,
     db:Session=Depends(get_db),
+
     current_user: user_sch.User = Depends(get_current_user)
 ):
     query = order_query.get_expanditure(db=db,id=id,client_id=None,branch_id=None,status=None)
@@ -399,3 +402,29 @@ async def get_tools(
     current_user: user_sch.User = Depends(get_current_user)
     ):
     return order_query.get_tools(db,id=id)
+
+
+
+@order_router.get('/v1/orders/excell',summary='get excell',tags=['Order'])
+async def get_excell(
+    status : Optional[int] = None,
+    from_date : Optional[date] = None,
+    to_date : Optional[date] = None,
+    db:Session=Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
+    query = order_query.get_orders_excell_generation(db=db,
+                                                     status=status,
+                                                     from_date=from_date,
+                                                     to_date=to_date)
+    if query:
+        file_name = generate_excell_order_list(data=query)
+        return {'success':True,'file':file_name}
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No data found",
+        )
+
+
+

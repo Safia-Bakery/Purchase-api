@@ -243,19 +243,6 @@ def getproducts(key):
     
 
 
-def list_departments(key):
-    departments = requests.get(
-        f"{BASE_URL}/resto/api/corporation/departments?key={key}"
-    )
-
-    root = ET.fromstring(departments.content)
-    corporate_item_dtos = root.findall("corporateItemDto")
-
-    names = [
-        [item.find("name").text, item.find("id").text] for item in corporate_item_dtos
-    ]
-    return names
-
 
 def generate_excell(data,db):
     inseting_data = {"Наименование": [],"Aртикуль":[],  "Ед. изм.": [], "Цена, шт": [],'Количество':[], 'Сумма':[]}
@@ -277,5 +264,26 @@ def generate_excell(data,db):
         inseting_data["Сумма"].append(tool_totalprice)
     df = pd.DataFrame(inseting_data)
 
+    df.to_excel("files/output.xlsx", index=False)
+    return "files/output.xlsx"
+
+
+status_names = {
+    '0':'Новый',
+    '1':'Принят',
+    '3':'Отменен',
+    '2':'Выполнен'
+
+}
+
+def generate_excell_order_list(data):
+    inserting_data  = {'ID':[],"Бригадир":[],"Филиал":[],'Статус':[]}
+    for i in data:
+        inserting_data["ID"].append(i.id)
+        inserting_data["Бригадир"].append(i.user.name)
+        inserting_data["Филиал"].append(i.branch.name)
+        inserting_data["Статус"].append(status_names[str(i.status)])
+
+    df = pd.DataFrame(inserting_data)
     df.to_excel("files/output.xlsx", index=False)
     return "files/output.xlsx"

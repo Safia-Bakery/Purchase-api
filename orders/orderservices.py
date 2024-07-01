@@ -6,6 +6,7 @@ import requests
 from dotenv import load_dotenv
 import os
 import xml.etree.ElementTree as ET
+import pandas as pd
 load_dotenv()
 
 BASE_URL = os.getenv("BASE_URL")
@@ -62,7 +63,6 @@ def get_productsmainunit(key):
     products = ET.fromstring(products.content)
     products = products.findall("productDto")
     return products
-
 
 
 
