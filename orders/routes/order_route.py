@@ -410,24 +410,21 @@ async def get_tools(
 
 @order_router.get('/v1/orders/excell',summary='get excell',tags=['Order'])
 async def get_excell(
-    order_status : Optional[int] = None,
+    status : Optional[int] = None,
     from_date : Optional[date] = None,
     to_date : Optional[date] = None,
     db:Session=Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)
 ):
     query = order_query.get_orders_excell_generation(db=db,
-                                                     status=order_status,
+                                                     status=status,
                                                      from_date=from_date,
                                                      to_date=to_date)
     if query:
         file_name = generate_excell_order_list(data=query)
         return {'success':True,'file':file_name}
     else:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No data found",
-        )
+        return {'success':False,'message':'No data found'}
 
 
 
