@@ -186,11 +186,11 @@ async def reset_password(
     return {"message":"Password reset successfully",'success':True}
 
 
-@user_router.post('/role',summary="Create role",tags=["User"])
-async def create_role(
-    form_data:user_sch.RoleCreate,
-    db: Session = Depends(get_db)
-):
-
-    role = query.create_role(db=db,role=form_data)
-    return role
+# @user_router.post('/role',summary="Create role",tags=["User"])
+# async def create_role(
+#     form_data:user_sch.RoleCreate,
+#     db: Session = Depends(get_db)
+# ):
+#
+#     role = query.create_role(db=db,role=form_data)
+#     return role

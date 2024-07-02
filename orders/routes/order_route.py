@@ -291,12 +291,13 @@ async def get_expanditure_router(
     query = paginate(order_query.get_expanditure(db, id=id,client_id=client_id,branch_id=branch_id,status=status,created_at=created_at))
     total_sum = 0
     if id is not None:
-        if query.items[0].expendituretool:
-            for i in query.items[0].expendituretool:
-                try:
-                    total_sum += i.amount * i.tool.price
-                except:
-                    pass
+        if query.items:
+            if query.items[0].expendituretool:
+                for i in query.items[0].expendituretool:
+                    try:
+                        total_sum += i.amount * i.tool.price
+                    except:
+                        pass
 
         query.items[0].total_sum = "{:.2f}".format(total_sum)
     return query
