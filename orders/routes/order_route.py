@@ -111,10 +111,12 @@ async def create_order(
 @order_router.get("/order", summary="Get orders",tags=["Order"],response_model=Page[order_sch.GetOrders])
 async def get_orders(
     user_id: Optional[int] = None,
+    from_date: Optional[date] = None,
+    to_date: Optional[date] = None,
     status: Optional[int] = None,
     db: Session = Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)):
-    return paginate(order_query.get_orders(db,user_id= user_id, status=status))
+    return paginate(order_query.get_orders(db,user_id= user_id, status=status, from_date=from_date, to_date=to_date))
 
 
 

@@ -63,10 +63,12 @@ def create_order(db: Session,user_id,brend,product,role,category_id,safia_worker
     db.refresh(db_order)
     return db_order
 
-def get_orders(db: Session,user_id,status):
+def get_orders(db: Session,user_id,status,from_date,to_date):
     query = db.query(Orders)
     if user_id is not None:
         query = query.filter(Orders.user_id == user_id)
+    if from_date is not None and to_date is not None:
+        query = query.filter(Orders.created_at >= from_date).filter(Orders.created_at <= to_date)
     if status is not None:
         query = query.filter(Orders.status == status)
     return query.order_by(Orders.id.desc()).all()
