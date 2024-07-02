@@ -283,11 +283,12 @@ async def get_expanditure_router(
     id: Optional[int] = None,
     client_id: Optional[int] = None,
     branch_id: Optional[int] = None,
+    created_at: Optional[date] = None,
     status: Optional[int] = None,
     db: Session = Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)
 ):
-    query = paginate(order_query.get_expanditure(db, id=id,client_id=client_id,branch_id=branch_id,status=status))
+    query = paginate(order_query.get_expanditure(db, id=id,client_id=client_id,branch_id=branch_id,status=status,created_at=created_at))
     total_sum = 0
     if id is not None:
         for i in query.items[0].expendituretool:
