@@ -7,7 +7,7 @@ from sqlalchemy.sql import func
 from datetime import datetime,timedelta
 from sqlalchemy import or_, and_, Date, cast
 from uuid import UUID
-from users.models.users import Users,Roles,Accesses,Permissions,ParentPermissions
+from users.models.users import Users
 from users.schemas import user_sch
 
 
@@ -108,20 +108,4 @@ def user_update(db:Session,id:int,status:Optional[int]=None,password:Optional[st
     return db_user
 
 
-
-def role_create(db: Session, role: user_sch.RoleCreate):
-    db_role = Roles(
-        name=role.name,
-        description=role.description,
-    )
-    CommitDb().insert_data(db=db,data=db_role)
-
-    for access in role.access:
-        db_access = Accesses(
-            role_id=db_role.id,
-            permission_id=access.permission_id,
-        )
-        CommitDb().insert_data(db=db,data=db_access)
-
-    return db_role
 
