@@ -299,7 +299,11 @@ async def get_expanditure_router(
                     pass
 
         query.items[0].total_sum = "{:.2f}".format(total_sum)
-    return paginate(query)
+
+
+
+
+    return paginate([])
 
 
 
