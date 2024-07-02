@@ -7,8 +7,51 @@ from sqlalchemy.sql import func
 from datetime import datetime,timedelta
 from sqlalchemy import or_, and_, Date, cast
 from uuid import UUID
-from users.models.users import Users  
+from users.models.users import Users,Roles,Accesses,Permissions,ParentPermissions
 from users.schemas import user_sch
+
+
+class CommitDb():
+    def insert_data(self,db:Session,data):
+        try:
+            db.add(data)
+            db.commit()
+            db.refresh(data)
+            return data
+        except Exception as e:
+            db.rollback()
+            return False
+
+    def update_data(self,db:Session,data):
+        try:
+            db.commit()
+            db.refresh(data)
+            return data
+        except:
+            db.rollback()
+            return False
+
+    def delete_data(self,db:Session,data):
+
+        try:
+            db.delete(data)
+            db.commit()
+            return data
+        except:
+            db.rollback()
+            return False
+
+    def get_data(self,db:Session,data):
+        try:
+            return data
+        except:
+            return False
+        finally:
+            #db.close()
+            return True
+
+
+
 
 
 def hash_password(password):
@@ -63,4 +106,22 @@ def user_update(db:Session,id:int,status:Optional[int]=None,password:Optional[st
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+
+def role_create(db: Session, role: user_sch.RoleCreate):
+    db_role = Roles(
+        name=role.name,
+        description=role.description,
+    )
+    CommitDb().insert_data(db=db,data=db_role)
+
+    for access in role.access:
+        db_access = Accesses(
+            role_id=db_role.id,
+            permission_id=access.permission_id,
+        )
+        CommitDb().insert_data(db=db,data=db_access)
+
+    return db_role
 

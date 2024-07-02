@@ -91,6 +91,15 @@ class Roles(BaseModel):
         orm_mode = True
 
 
+class RoleCreate(BaseModel):
+    name:str
+    description:Optional[str]=None
+    status:Optional[int]=None
+    access: Optional[list[int]]=None
+    class Config:
+        orm_mode = True
+
+
 class User(BaseModel):
     id:int
     address:Optional[str]=None
