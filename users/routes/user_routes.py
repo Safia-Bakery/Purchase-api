@@ -186,11 +186,80 @@ async def reset_password(
     return {"message":"Password reset successfully",'success':True}
 
 
-# @user_router.post('/role',summary="Create role",tags=["User"])
-# async def create_role(
-#     form_data:user_sch.RoleCreate,
-#     db: Session = Depends(get_db)
-# ):
-#
-#     role = query.create_role(db=db,role=form_data)
-#     return role
+@user_router.post('/role',summary="Create role",tags=["User"])
+async def create_role(
+    form_data:user_sch.RoleCreate,
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
+
+    role = query.create_roles(db=db,form_data=form_data)
+    return role
+
+
+@user_router.get('/roles',summary="Get roles",tags=["User"])
+async def get_roles(
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
+    roles = query.get_roles(db)
+
+    return roles
+
+@user_router.get('/roles/{id}',summary="Get role",tags=["User"],response_model=user_sch.Roles)
+async def get_role(
+    id:int,
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
+    role = query.get_roles(db,id=id)
+    if role:
+        return role[0]
+    else:
+        raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Role not found",
+            )
+
+@user_router.get('/permissions',summary="Get permissions",tags=["User"])
+async def get_permissions(
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
+    permissions = query.get_permissions(db)
+
+    return permissions
+
+
+
+
+@user_router.get('/users',summary="Get users",tags=["User"],response_model=Page[user_sch.GetUsers])
+async def get_users(
+        id: Optional[int] = None,
+    current_user: user_sch.User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    users = query.get_users(db,id=id)
+    return paginate(users)
+
+
+
+@user_router.post('/users',summary="Create user",tags=["User"],response_model=user_sch.GetUsers)
+async def create_user(
+    form_data:user_sch.UserCreate,
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
+    user = query.user_create(db=db,user=form_data)
+    return user
+
+
+@user_router.put('/users',summary="Update user",tags=["User"],response_model=user_sch.GetUsers)
+async def update_user(
+    form_data:user_sch.UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
+    user = query.users_update_body(db=db,form_data=form_data)
+    return user
+

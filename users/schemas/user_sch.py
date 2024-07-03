@@ -18,10 +18,12 @@ class UserCreate(BaseModel):
     email: Optional[str]=None
     company_name: Optional[str]=None
     phone: Optional[str]=None
+    role_id: Optional[int]=None
     
 
 class UserUpdate(BaseModel):
     #username:Optional[str]=None
+    id:int
     password:Optional[str]=None
     address:Optional[str]=None
     name: Optional[str]=None
@@ -29,6 +31,7 @@ class UserUpdate(BaseModel):
     email: Optional[str]=None
     company_name: Optional[str]=None
     phone: Optional[str]=None
+    role_id: Optional[int]=None
 
 
 class UserVerify(BaseModel):
@@ -95,7 +98,17 @@ class RoleCreate(BaseModel):
     name:str
     description:Optional[str]=None
     status:Optional[int]=None
-    access: Optional[list[int]]=None
+    accesses: Optional[list[int]]=None
+    class Config:
+        orm_mode = True
+
+
+class RoleUpdate(BaseModel):
+    id:int
+    name:Optional[str]=None
+    description:Optional[str]=None
+    status:Optional[int]=None
+    accesses: Optional[list[int]]=None
     class Config:
         orm_mode = True
 
@@ -110,6 +123,21 @@ class User(BaseModel):
     phone: Optional[str]=None
     status: int
     #role: Optional[Roles]=None
+    class Config:
+        orm_mode = True
+
+
+
+class GetUsers(BaseModel):
+    id:int
+    address:Optional[str]=None
+    name: Optional[str]=None
+    inn: Optional[str]=None
+    email: Optional[str]=None
+    company_name: Optional[str]=None
+    phone: Optional[str]=None
+    status: int
+    role: Optional[Roles]=None
     class Config:
         orm_mode = True
 

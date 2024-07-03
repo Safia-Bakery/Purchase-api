@@ -103,7 +103,7 @@ async def manu(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
     
     elif input_text=='Мои заявки':
         
-        order_list = crud.get_orders(db=db,id=None)
+        order_list = crud.get_orders(db=db,id=None,client_id=update.message.from_user.id)
         if order_list:
             reply_keyboard = transform_list(order_list,size=3,key='id')
             await update.message.reply_text('Ваши заявки', reply_markup=ReplyKeyboardMarkup(reply_keyboard,resize_keyboard=True))

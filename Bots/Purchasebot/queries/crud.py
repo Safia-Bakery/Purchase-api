@@ -29,10 +29,12 @@ def create_user(db:Session,name,id,phone_number):
     return query
 
 
-def get_orders(db:Session,id:Optional[int]=None):
+def get_orders(db:Session,id:Optional[int]=None,client_id:Optional[int]=None):
     query = db.query(orders.Expanditure)
     if id is not None:
         query = query.filter(orders.Expanditure.id==id)
+    if client_id is not None:
+        query = query.filter(orders.Expanditure.client_id==client_id)
     return query.all()
 
 

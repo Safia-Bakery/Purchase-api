@@ -7,7 +7,7 @@ from sqlalchemy.sql import func
 from datetime import datetime,timedelta
 from sqlalchemy import or_, and_, Date, cast
 from uuid import UUID
-from users.models.users import Users
+from users.models.users import Users,Permissions,Accesses,ParentPermissions,Roles
 from users.schemas import user_sch
 
 
@@ -88,6 +88,7 @@ def user_create(db: Session, user: user_sch.UserCreate):
         email=user.email,
         company_name=user.company_name,
         phone=username,
+        role_id=user.role_id
     )
     db.add(db_user)
     db.commit()
@@ -108,4 +109,76 @@ def user_update(db:Session,id:int,status:Optional[int]=None,password:Optional[st
     return db_user
 
 
+
+def users_update_body(db:Session,form_data:user_sch.UserUpdate):
+    db_user = db.query(Users).filter(Users.id == form_data.id).first()
+    if db_user:
+        if form_data.name is not None:
+            db_user.name = form_data.name
+        if form_data.address is not None:
+            db_user.address = form_data.address
+        if form_data.email is not None:
+            db_user.email = form_data.email
+        if form_data.inn is not None:
+            db_user.inn = form_data.inn
+        if form_data.company_name is not None:
+            db_user.company_name = form_data.company_name
+        if form_data.phone is not None:
+            db_user.phone = form_data.phone
+        if form_data.role_id is not None:
+            db_user.role_id = form_data.role_id
+        db = CommitDb().update_data(db,db_user)
+    return db_user
+
+
+
+
+def create_roles(db:Session,form_data:user_sch.RoleCreate):
+    query = Roles(name=form_data.name,description=form_data.description,status=form_data.status)
+    query = CommitDb().insert_data(db,query)
+    for access in form_data.accesses:
+        add_access = Accesses(role_id=query.id,permission_id=access)
+        CommitDb().insert_data(db,add_access)
+
+    return query
+
+
+def update_roles(db:Session,id:int,form_data:user_sch.RoleCreate):
+    query = db.query(Roles).filter(Roles.id == id).first()
+    if query:
+        query.name = form_data.name
+        query.description = form_data.description
+        query.status = form_data.status
+        query = CommitDb().update_data(db,query)
+        if form_data.accesses:
+            delete_access = db.query(Accesses).filter(Accesses.role_id == id).delete()
+            CommitDb().delete_data(db,delete_access)
+            for access in form_data.accesses:
+                add_access = Accesses(role_id=query.id,permission_id=access)
+                CommitDb().insert_data(db,add_access)
+
+    return query
+
+
+
+def get_roles(db:Session,id:Optional[int]=None):
+    query = db.query(Roles)
+    if id is not None:
+        query = query.filter(Roles.id == id)
+    return query.all()
+
+
+
+def get_users(db:Session,id:Optional[int]=None):
+    query = db.query(Users)
+    if id is not None:
+        query = query.filter(Users.id == id)
+    return query.all()
+
+
+
+def get_permissions(db:Session):
+    query = db.query(Permissions)
+
+    return query.all()
 
