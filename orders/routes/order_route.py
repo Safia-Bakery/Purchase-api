@@ -343,7 +343,7 @@ async def get_excell(
 
     current_user: user_sch.User = Depends(get_current_user)
 ):
-    query = order_query.get_expanditure(db=db,id=id,client_id=None,branch_id=None,status=None)
+    query = order_query.get_expanditure(db=db,id=id,client_id=None,branch_id=None,status=None,created_at=None)
     if query:
         file_name = generate_excell(data=query[0].expendituretool,db=db)
         return {'success':True,'file':file_name}
