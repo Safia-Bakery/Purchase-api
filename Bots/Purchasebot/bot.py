@@ -132,7 +132,7 @@ async def orderlist(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
         text +=f"Филиал: {order_list[0].branch.name}\n\n"
         text +='Товары:\n'
         for i in order_list[0].expendituretool:
-            text += f"{i.tool.name} x {i.amount} {i.mainunit}\n"
+            text += f"{i.tool.name} x {i.amount} {i.tool.mainunit}\n"
     else:
         text = "No заявки"
     await update.message.reply_text(text=text,reply_markup=ReplyKeyboardMarkup(manu_buttons,resize_keyboard=True))  
