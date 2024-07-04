@@ -106,6 +106,11 @@ async def register(
 
 @user_router.get("/me", response_model=user_sch.User, summary="Get current user",tags=["User"])
 async def current_user(db:Session=Depends(get_db),current_user: user_sch.User = Depends(get_current_user)):
+
+    if current_user is not None:
+        permission_dict = {str(permission.permission_id): True for permission in current_user.role.access}
+        current_user.permissions = permission_dict
+
     return current_user
 
 

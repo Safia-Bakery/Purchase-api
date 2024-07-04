@@ -122,6 +122,7 @@ class User(BaseModel):
     company_name: Optional[str]=None
     phone: Optional[str]=None
     status: int
+    permissions: Optional[dict]=None
     #role: Optional[Roles]=None
     class Config:
         orm_mode = True

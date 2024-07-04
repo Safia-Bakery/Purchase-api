@@ -121,6 +121,7 @@ async def get_current_user(
     user: Union[dict[str, Any], None] = query.get_user(db, sub)
 
     if user is None:
+
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Could not find user",
