@@ -143,7 +143,7 @@ def create_roles(db:Session,form_data:user_sch.RoleCreate):
     return query
 
 
-def update_roles(db:Session,form_data:user_sch.RoleCreate):
+def update_roles(db:Session,form_data:user_sch.RoleUpdate):
     query = db.query(Roles).filter(Roles.id == form_data.id).first()
     if query:
         query.name = form_data.name
