@@ -143,8 +143,8 @@ def create_roles(db:Session,form_data:user_sch.RoleCreate):
     return query
 
 
-def update_roles(db:Session,id:int,form_data:user_sch.RoleCreate):
-    query = db.query(Roles).filter(Roles.id == id).first()
+def update_roles(db:Session,form_data:user_sch.RoleCreate):
+    query = db.query(Roles).filter(Roles.id == form_data.id).first()
     if query:
         query.name = form_data.name
         query.description = form_data.description
@@ -152,7 +152,7 @@ def update_roles(db:Session,id:int,form_data:user_sch.RoleCreate):
         query = CommitDb().update_data(db,query)
 
         if form_data.accesses is not None:
-            delete_access = db.query(Accesses).filter(Accesses.role_id == id).delete()
+            delete_access = db.query(Accesses).filter(Accesses.role_id == form_data.id).delete()
             CommitDb().delete_data(db,delete_access)
             for access in form_data.accesses:
                 add_access = Accesses(role_id=query.id,permission_id=access)

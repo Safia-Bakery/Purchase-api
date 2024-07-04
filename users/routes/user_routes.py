@@ -197,6 +197,15 @@ async def create_role(
     return role
 
 
+@user_router.put('/role',summary="Update role",tags=["User"])
+async def update_role(
+    form_data:user_sch.RoleUpdate,
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
+    role = query.update_roles(db=db,form_data=form_data)
+    return role
+
 @user_router.get('/roles',summary="Get roles",tags=["User"])
 async def get_roles(
     db: Session = Depends(get_db),
