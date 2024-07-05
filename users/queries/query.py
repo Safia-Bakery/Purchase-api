@@ -187,7 +187,7 @@ def get_permissions(db:Session):
 
 
 def get_purchasers(db:Session):
-    query = db.query(Users).filter(Roles.name.ilike("%Закупщик%")) #.filter(Roles.name.ilib ke("%Закупщик%"))
+    query = db.query(Users).join(Roles).filter(Roles.name.ilike("%Закупщик%")) #.filter(Roles.name.ilib ke("%Закупщик%"))
 
     return query.all()
 

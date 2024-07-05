@@ -115,6 +115,17 @@ class RoleUpdate(BaseModel):
         orm_mode = True
 
 
+class RoleGet(BaseModel):
+    id:int
+    name:Optional[str]=None
+    description:Optional[str]=None
+    status:Optional[int]=None
+    created_at: Optional[datetime]=None
+    updated_at: Optional[datetime]=None
+    class Config:
+        orm_mode = True
+
+
 class User(BaseModel):
     id:int
     address:Optional[str]=None
@@ -141,6 +152,19 @@ class GetUsers(BaseModel):
     phone: Optional[str]=None
     status: int
     role: Optional[Roles]=None
+    class Config:
+        orm_mode = True
+
+
+class PurchasersGet(BaseModel):
+    id: int
+    address: Optional[str] = None
+    name: Optional[str] = None
+    inn: Optional[str] = None
+    email: Optional[str] = None
+    company_name: Optional[str] = None
+    phone: Optional[str] = None
+    status: int
     class Config:
         orm_mode = True
 

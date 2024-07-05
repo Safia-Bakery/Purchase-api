@@ -278,7 +278,7 @@ async def update_user(
     return user
 
 
-@user_router.get('/purchasers',summary="Get Purchasers",tags=["User"],response_model=Page[user_sch.GetUsers])
+@user_router.get('/purchasers',summary="Get Purchasers",tags=["User"],response_model=Page[user_sch.PurchasersGet])
 async def get_purchasers(
     db: Session = Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)
