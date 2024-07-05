@@ -155,7 +155,7 @@ def update_roles(db:Session,form_data:user_sch.RoleUpdate):
 
         if form_data.accesses is not None:
             delete_access = db.query(Accesses).filter(Accesses.role_id == form_data.id).delete()
-            CommitDb().delete_data(db,delete_access)
+            db.commit()
             for access in form_data.accesses:
                 add_access = Accesses(role_id=query.id,permission_id=access)
                 CommitDb().insert_data(db,add_access)
