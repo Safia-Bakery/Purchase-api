@@ -56,7 +56,7 @@ class GetOrders(BaseModel):
     price: Optional[float] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
-    purchaser: Optional[PurchaseGet] = None
+    purchaser: Optional[list[PurchaseGet]] = None
 
     class Config:
         orm_mode = True
