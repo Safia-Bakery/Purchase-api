@@ -247,7 +247,7 @@ async def get_permissions(
 
 
 
-@user_router.get('/users',summary="Get users",tags=["User"],response_model=Page[user_sch.GetUsers])
+@user_router.get('/users',summary="Get users",tags=["User"],response_model=Page[user_sch.PurchasersGet])
 async def get_users(
         id: Optional[int] = None,
     current_user: user_sch.User = Depends(get_current_user),
