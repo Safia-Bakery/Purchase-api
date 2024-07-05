@@ -82,7 +82,7 @@ class GetOrderById(BaseModel):
     product_images: Optional[List[dict]]=None
     brochures: Optional[List[dict]] = None
     sertificates: Optional[List[dict]] = None
-    purchaser: Optional[PurchaseGet] = None
+    purchaser: Optional[list[PurchaseGet]] = None
     class Config:
         orm_mode = True
 
