@@ -76,7 +76,7 @@ def get_orders(db: Session,user_id,status,from_date,to_date,category_id,current_
     if current_user.role is not None:
 
         if 'Закупщик' in str(current_user.role.name):
-            query = query.filter(OrdersRelations.user_id==user_id)
+            query = query.filter(OrdersRelations.user_id==current_user.id)
     return query.order_by(Orders.id.desc()).all()
 
 
