@@ -50,6 +50,8 @@ class GetOrders(BaseModel):
     safia_worker: Optional[bool] = None
     user:Optional[user_sch.User] = None
     price: Optional[float] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
     class Config:
         orm_mode = True
