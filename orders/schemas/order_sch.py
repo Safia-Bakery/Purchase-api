@@ -222,6 +222,6 @@ class DeleteFile(BaseModel):
 
 
 class UpdateTool(BaseModel):
-    data : Dict[str, int]
+    data : Dict[str, float]
     class Config:
         orm_mode = True
