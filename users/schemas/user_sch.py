@@ -32,6 +32,7 @@ class UserUpdate(BaseModel):
     company_name: Optional[str]=None
     phone: Optional[str]=None
     role_id: Optional[int]=None
+    status: Optional[int]=None
 
 
 class UserVerify(BaseModel):

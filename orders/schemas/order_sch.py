@@ -38,6 +38,10 @@ class Files(BaseModel):
     id:int
     url:str
 
+class PurchaseGet(BaseModel):
+    user_id: Optional[int] = None
+    user: Optional[user_sch.User] = None
+
 class GetOrders(BaseModel):
     id:int
     user_id: int
@@ -52,9 +56,13 @@ class GetOrders(BaseModel):
     price: Optional[float] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+    purchaser: Optional[PurchaseGet] = None
 
     class Config:
         orm_mode = True
+
+
+
 
 
 class GetOrderById(BaseModel):
@@ -74,6 +82,7 @@ class GetOrderById(BaseModel):
     product_images: Optional[List[dict]]=None
     brochures: Optional[List[dict]] = None
     sertificates: Optional[List[dict]] = None
+    purchaser: Optional[PurchaseGet] = None
     class Config:
         orm_mode = True
 
@@ -99,6 +108,8 @@ class OrderUpdate(BaseModel):
     id:int
     status: Optional[int] = None
     deny_reason: Optional[str] = None
+    purchaser_id: Optional[int] = None
+
 
 
 

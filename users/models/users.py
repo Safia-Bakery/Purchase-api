@@ -86,6 +86,7 @@ class Users(Base):
     role_id = Column(BIGINT, ForeignKey("roles.id"))
     role = relationship("Roles", back_populates="user")
     order = relationship("Orders", back_populates="user")
+    relation = relationship("OrdersRelations", back_populates="user")
     created_at = Column(DateTime(timezone=True), default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 

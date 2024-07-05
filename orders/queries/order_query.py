@@ -8,7 +8,7 @@ from datetime import datetime,timedelta
 from sqlalchemy import or_, and_, Date, cast
 from orders.orderservices import  find_hierarchy
 from uuid import UUID
-from orders.models.orders import Orders, Categories, Branchs, Clients, ToolParents,Tools,Expanditure,ExpenditureTools,Files,FilesRelations
+from orders.models.orders import Orders, Categories, Branchs, Clients, ToolParents,Tools,Expanditure,ExpenditureTools,Files,FilesRelations,OrdersRelations
 from orders.schemas import order_sch
 
 timezonetash = pytz.timezone("Asia/Tashkent")   
@@ -63,7 +63,7 @@ def create_order(db: Session,user_id,brend,product,role,category_id,safia_worker
     db.refresh(db_order)
     return db_order
 
-def get_orders(db: Session,user_id,status,from_date,to_date,category_id):
+def get_orders(db: Session,user_id,status,from_date,to_date,category_id,current_user):
     query = db.query(Orders)
     if user_id is not None:
         query = query.filter(Orders.user_id == user_id)
@@ -73,6 +73,9 @@ def get_orders(db: Session,user_id,status,from_date,to_date,category_id):
         query = query.filter(Orders.status == status)
     if category_id is not None:
         query = query.filter(Orders.category_id == category_id)
+    if current_user.role is not None:
+        if current_user.role.name =='Закупщик':
+            query = query.filter(OrdersRelations.user_id==current_user.id)
     return query.order_by(Orders.id.desc()).all()
 
 
@@ -84,6 +87,15 @@ def update_order(db: Session, order: order_sch.OrderUpdate):
         db_order.deny_reason = order.deny_reason
     db.commit()
     db.refresh(db_order)
+    if  order.purchaser_id is not None:
+        db.query(OrdersRelations).filter(OrdersRelations.order_id == order.id).delete()
+        db.commit()
+        order_relation = OrdersRelations(
+            order_id = order.id,
+            user_id = order.purchaser_id
+        )
+        db.add(order_relation)
+        db.commit()
     return db_order
 
 

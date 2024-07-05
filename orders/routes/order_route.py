@@ -117,7 +117,9 @@ async def get_orders(
     category_id: Optional[int] = None,
     db: Session = Depends(get_db),
     current_user: user_sch.User = Depends(get_current_user)):
-    return paginate(order_query.get_orders(db,user_id= user_id, status=status, from_date=from_date, to_date=to_date, category_id=category_id))
+
+
+    return paginate(order_query.get_orders(db,user_id= user_id, status=status, from_date=from_date, to_date=to_date, category_id=category_id,current_user=current_user))
 
 
 

@@ -277,3 +277,12 @@ async def update_user(
     user = query.users_update_body(db=db,form_data=form_data)
     return user
 
+
+@user_router.get('/purchasers',summary="Get Purchasers",tags=["User"],response_model=Page[user_sch.GetUsers])
+async def get_purchasers(
+    db: Session = Depends(get_db),
+    current_user: user_sch.User = Depends(get_current_user)
+):
+    users = query.get_purchasers(db)
+    return paginate(users)
+

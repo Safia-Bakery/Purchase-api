@@ -75,6 +75,17 @@ class Orders(Base):
     created_at = Column(DateTime(timezone=True), default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     file = relationship("FilesRelations", back_populates="order")
+    purchaser = relationship("OrdersRelations", back_populates="order")
+
+class OrdersRelations(Base):
+    __tablename__ = "orders_relations"
+    id = Column(BIGINT, primary_key=True, index=True)
+    order_id = Column(BIGINT, ForeignKey("orders.id"))
+    order = relationship("Orders", back_populates="purchaser")
+    user_id = Column(BIGINT, ForeignKey("users.id"))
+    user = relationship("Users", back_populates="relation")
+    created_at = Column(DateTime(timezone=True), default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
 
 

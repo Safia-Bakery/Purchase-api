@@ -127,6 +127,8 @@ def users_update_body(db:Session,form_data:user_sch.UserUpdate):
             db_user.phone = form_data.phone
         if form_data.role_id is not None:
             db_user.role_id = form_data.role_id
+        if form_data.status is not None:
+            db_user.status = form_data.status
         db = CommitDb().update_data(db,db_user)
     return db_user
 
@@ -180,6 +182,12 @@ def get_users(db:Session,id:Optional[int]=None):
 
 def get_permissions(db:Session):
     query = db.query(Permissions)
+
+    return query.all()
+
+
+def get_purchasers(db:Session):
+    query = db.query(Users).filter(Roles.name.ilike("%Закупщик%")) #.filter(Roles.name.ilib ke("%Закупщик%"))
 
     return query.all()
 
