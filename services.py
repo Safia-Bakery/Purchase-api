@@ -286,7 +286,10 @@ def generate_excell_order_list(data):
         inserting_data['Категория'].append(i.category.name_ru)
         inserting_data['Дата оформления'].append(str(date_reformed))
         inserting_data['Статус'].append(status_names[str(i.status)])
-        inserting_data['Ответственный закупщик'].append(i.purchaser.user.name)
+        if i.purchaser is None:
+            inserting_data['Ответственный закупщик'].append('Не назначен')
+        else:
+            inserting_data['Ответственный закупщик'].append(i.purchaser.user.name)
 
 
     df = pd.DataFrame(inserting_data)
