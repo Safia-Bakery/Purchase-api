@@ -424,7 +424,9 @@ async def get_excell(
     query = order_query.get_orders_excell_generation(db=db,
                                                      status=status,
                                                      from_date=from_date,
-                                                     to_date=to_date)
+                                                     to_date=to_date,
+                                                     current_user=current_user
+                                                     )
     if query:
         file_name = generate_excell_order_list(data=query)
         return {'success':True,'file':file_name}

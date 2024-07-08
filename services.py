@@ -278,14 +278,16 @@ status_names = {
 }
 
 def generate_excell_order_list(data):
-    inserting_data  = {'Номер заявки':[],"Клиент":[],"Категория":[],'Дата оформления':[],"Статус":[]}
+    inserting_data  = {'Номер заявки':[],"Клиент":[],"Категория":[],'Дата оформления':[],'Ответственный закупщик':[],"Статус":[]}
     for i in data:
         date_reformed = i.created_at.strftime("%d-%m-%Y %H:%M")
         inserting_data['Номер заявки'].append(i.id)
         inserting_data['Клиент'].append(i.user.name)
-        inserting_data['Категория'].append(i.category.name_uz)
+        inserting_data['Категория'].append(i.category.name_ru)
         inserting_data['Дата оформления'].append(str(date_reformed))
         inserting_data['Статус'].append(status_names[str(i.status)])
+        inserting_data['Ответственный закупщик'].append(i.purchaser.user.name)
+
 
     df = pd.DataFrame(inserting_data)
     df.to_excel("files/output.xlsx", index=False)

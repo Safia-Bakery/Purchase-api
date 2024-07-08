@@ -431,10 +431,12 @@ def get_tools(db:Session,id):
     return query
 
 
-def get_orders_excell_generation(db:Session,status,from_date,to_date):
+def get_orders_excell_generation(db:Session,status,from_date,to_date,current_user):
     query = db.query(Orders)
     if status is not None:
         query = query.filter(Orders.status == status)
     if from_date is not None and to_date is not None:
         query = query.filter(Orders.created_at >= from_date).filter(Orders.created_at <= to_date)
+    if current_user.role is not None and 'Закупщик' in str(current_user.role.name):
+        query = query.join(OrdersRelations).filter(OrdersRelations.user_id==current_user.id)
     return query.all()
