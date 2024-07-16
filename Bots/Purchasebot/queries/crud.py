@@ -73,13 +73,13 @@ def create_user(name,id,phone_number):
 
 
 def get_orders(id:Optional[int]=None,client_id:Optional[int]=None):
-    with SessionLocal() as db:
-        query = db.query(orders.Expanditure)
-        if id is not None:
-            query = query.filter(orders.Expanditure.id==id)
-        if client_id is not None:
-            query = query.filter(orders.Expanditure.client_id==client_id)
-        return query.all()
+    db = SessionLocal()
+    query = db.query(orders.Expanditure)
+    if id is not None:
+        query = query.filter(orders.Expanditure.id==id)
+    if client_id is not None:
+        query = query.filter(orders.Expanditure.client_id==client_id)
+    return query.all()
 
 
 
