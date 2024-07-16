@@ -17,7 +17,6 @@ from telegram.ext import (
 
 )
 
-from database import SessionLocal
 from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 import requests
@@ -31,7 +30,6 @@ FRONT_URL = 'https://super.purchase.safiabakery.uz/'
 
 manu_buttons = [['Подать заявку','Мои заявки']]
 
-db = SessionLocal()
 backend_location = 'app/'
 
 
@@ -42,9 +40,9 @@ NAME,PHONE,PASSWORD,MANU,ORDERLIST,CREATEORDER= range(6)
 persistence = PicklePersistence(filepath='purchasepickle.pickle')
 
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE,db=db) -> int:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Starts the conversation and asks the user about their gender."""
-    user_client = crud.get_client(db=db,id=update.message.from_user.id)
+    user_client = crud.get_client(id=update.message.from_user.id)
     if user_client:
         await update.message.reply_text('Manu',reply_markup=ReplyKeyboardMarkup(manu_buttons,resize_keyboard=True))
         return MANU
@@ -56,7 +54,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE,db=db) -> int
 
 
 
-async def password(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
+async def password(update:Update,context:ContextTypes.DEFAULT_TYPE):
     input_text = update.message.text 
     if input_text == '5Thxk@t1':
         await update.message.reply_text('Пожалуйста напишите своё имя')
@@ -81,14 +79,14 @@ async def name(update:Update,context:ContextTypes.DEFAULT_TYPE):
 
 
 
-async def phone(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
+async def phone(update:Update,context:ContextTypes.DEFAULT_TYPE):
     context.user_data['phone_number'] = update.message.contact.phone_number.replace('+','')
-    crud.create_user(db=db,phone_number=context.user_data['phone_number'],name=context.user_data['name'],id=update.message.from_user.id)
+    crud.create_user(phone_number=context.user_data['phone_number'],name=context.user_data['name'],id=update.message.from_user.id)
     await update.message.reply_text("""Вы прошли регистрацию. Теперь можете оформлять заявки""",reply_markup=ReplyKeyboardMarkup(manu_buttons,resize_keyboard=True))
     return MANU
 
 
-async def manu(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
+async def manu(update:Update,context:ContextTypes.DEFAULT_TYPE):
     input_text = update.message.text
     if input_text =='Подать заявку':
         await update.message.reply_text(
@@ -103,7 +101,7 @@ async def manu(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
     
     elif input_text=='Мои заявки':
         
-        order_list = crud.get_orders(db=db,id=None,client_id=update.message.from_user.id)
+        order_list = crud.get_orders(id=None,client_id=update.message.from_user.id)
         if order_list:
             reply_keyboard = transform_list(order_list,size=3,key='id')
             await update.message.reply_text('Ваши заявки', reply_markup=ReplyKeyboardMarkup(reply_keyboard,resize_keyboard=True))
@@ -115,7 +113,7 @@ async def manu(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
 
 
 
-async def createorder(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
+async def createorder(update:Update,context:ContextTypes.DEFAULT_TYPE):
     data = json.loads(update.effective_message.web_app_data.data)
     await update.message.reply_text(f"Главное меню",reply_markup=ReplyKeyboardMarkup(keyboard=manu_buttons,resize_keyboard=True))
     return MANU
@@ -123,9 +121,9 @@ async def createorder(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
 
 
 
-async def orderlist(update:Update,context:ContextTypes.DEFAULT_TYPE,db=db):
+async def orderlist(update:Update,context:ContextTypes.DEFAULT_TYPE):
     input_data = update.message.text
-    order_list = crud.get_orders(db=db,id=input_data)
+    order_list = crud.get_orders(id=input_data)
     if order_list:
         text = ""
         text += f"№{order_list[0].id}\n"
