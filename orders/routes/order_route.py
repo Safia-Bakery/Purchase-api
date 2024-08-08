@@ -37,11 +37,28 @@ from datetime import date
 import os
 load_dotenv()
 
-
-
-
-
 order_router = APIRouter()
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+from pytz import timezone
+
+timezonetash = timezone("Asia/Tashkent")
+
+
+def synch_branches(db:Session):
+    key = authiiko()
+    departments = list_departments(key=key)
+    department_list = order_query.insert_fillials(db, departments)
+    return {"message": "Hello world"}
+
+
+@order_router.on_event("startup")
+def startup_event():
+    scheduler = BackgroundScheduler()
+    trigger  = CronTrigger(hour=1, minute=30, second=00,timezone=timezonetash)  # Set the desired time for the function to run (here, 12:00 PM)
+    scheduler.add_job(synch_branches, trigger=trigger, args=[next(get_db())])
+    scheduler.start()
 
 
 
