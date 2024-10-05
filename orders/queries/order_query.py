@@ -139,7 +139,12 @@ def get_or_update(db:Session,price,name,num,id,code,producttype,mainunit,departm
     query = db.query(Tools).filter(Tools.iikoid==id).first()
     if query:
         query.department=department
+        query.code=code
+        query.num=num
+        query.name=name
+        query.price=price
         query.last_update=datetime.now(timezonetash)
+
         db.commit()
         db.refresh(query)
         return query
