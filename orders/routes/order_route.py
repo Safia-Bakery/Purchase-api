@@ -76,8 +76,8 @@ def synch_branches(db:Session):
 @order_router.on_event("startup")
 def startup_event():
     scheduler = BackgroundScheduler()
-    trigger  = CronTrigger(hour=1, minute=30, second=00,timezone=timezonetash)  # Set the desired time for the function to run (here, 12:00 PM)
-    scheduler.add_job(synch_branches, trigger=trigger, args=[next(get_db())])
+    trigger  = CronTrigger(hour=1, minute=30, second=00,timezone=timezonetash,)  # Set the desired time for the function to run (here, 12:00 PM)
+    scheduler.add_job(synch_branches, trigger=trigger, args=[next(get_db())],max_instances=1)
     scheduler.start()
 
 
@@ -85,7 +85,7 @@ def startup_event():
 def startup_event():
     scheduler = BackgroundScheduler()
     trigger = CronTrigger(hour=1, minute=35, second=00,timezone=timezonetash)
-    scheduler.add_job(synch_products, trigger=trigger, args=[next(get_db())])
+    scheduler.add_job(synch_products, trigger=trigger, args=[next(get_db())],max_instances=1)
     scheduler.start()
 
 
