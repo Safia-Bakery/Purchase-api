@@ -28,11 +28,20 @@ from dotenv import load_dotenv
 import requests
 from users.queries import query
 
+from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.utils import get_openapi
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+
+security = HTTPBasic()
+
 load_dotenv()
 
 LOGIN_IIKO = os.environ.get("LOGIN_IIKO")
 PASSWORD_IIKO = os.environ.get("PASSWORD_IIKO")
 BASE_URL = os.environ.get("BASE_URL")
+DOCS_PASSWORD=os.environ.get("DOCS_PASSWORD")
+DOCS_USERNAME=os.environ.get("DOCS_USERNAME")
 
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  
@@ -295,3 +304,15 @@ def generate_excell_order_list(data):
     df = pd.DataFrame(inserting_data)
     df.to_excel("files/output.xlsx", index=False)
     return "files/output.xlsx"
+
+
+def get_current_user_for_docs(credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = DOCS_USERNAME
+    correct_password = DOCS_PASSWORD
+    if credentials.username != correct_username or credentials.password != correct_password:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    return credentials.username
