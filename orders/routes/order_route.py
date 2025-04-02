@@ -200,7 +200,7 @@ async def update_order(
             send_sms(query.user.phone, "Ваша заявка обработана.")
             # send message to user
         if query.status == 3:
-            send_sms(query.user.phone, f"К сожалению, ваша заявка была отклонена.")
+            send_sms(query.user.phone, f"Hello world")
 
 
     return query
